@@ -27,7 +27,14 @@ class customerController extends commonController
 	/*------------------------------------------------------ */
 	function index(  )
 	{
-		$condition  = ' 1 ';
+	    //业务员权限模块
+    	$userid = U::$userdata['user_id'];
+    	$pos_id = U::$userdata['pos_id'];
+    	if($pos_id==4){
+    		$condition  = ' 1  and createby='.$userid;
+    	}else{
+    		$condition  = ' 1 ';
+    	}
 		//初始化参数
 		if( isset($_GET['cat_id']) && !empty($_GET['cat_id']))
 		{
@@ -110,7 +117,7 @@ class customerController extends commonController
 		$comp_phone     = in( $_POST['customer_phone'] );   //电话号码
 		$comp_fax       = in( $_POST['customer_fax'] );       //传真
 		$comp_email     = in( $_POST['customer_email'] );  //电子邮箱
-		$comp_manager   = in( $_POST['create_by'] ); //负责人姓名
+		$comp_manager   = U::$userdata['user_id']; //负责人姓名
 		$comp_desc      =  $_POST['customer_desc'] ;     //公司描述
 
 		if ( empty($comp_name) || strlen($comp_name) < 3)
@@ -211,7 +218,6 @@ class customerController extends commonController
 		$comp_phone     = in( $_POST['customer_phone'] );   //电话号码
 		$comp_fax       = in( $_POST['customer_fax'] );       //传真
 		$comp_email     = in( $_POST['customer_email'] );  //电子邮箱
-		$comp_manager   = in( $_POST['crate_by'] ); //负责人姓名
 		$comp_desc      = $_POST['customer_desc'];     //公司描述
 
 		if ( empty($comp_name) || strlen($comp_name) < 3)
@@ -233,7 +239,6 @@ class customerController extends commonController
 							'customer_phone' 	    => $comp_phone,
 							'customer_fax' 	        => $comp_fax,
 							'customer_email' 	    => $comp_email,
-							'create_by' 	    => $comp_manager,
 							'customer_desc' 	    => $comp_desc,
 			);
 			if ( FALSE !== $this->partner->update("id=$comp_id", $data_ary) )

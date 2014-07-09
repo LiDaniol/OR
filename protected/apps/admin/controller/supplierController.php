@@ -27,7 +27,14 @@ class supplierController extends commonController
 	/*------------------------------------------------------ */
 	function index(  )
 	{
-		$condition  = ' 1 ';
+	    //业务员权限模块
+    	$userid = U::$userdata['user_id'];
+    	$pos_id = U::$userdata['pos_id'];
+    	if($pos_id==4){
+    		$condition  = ' 1  and createby='.$userid;
+    	}else{
+    		$condition  = ' 1 ';
+    	}
 		//初始化参数
 		if( isset($_GET['cat_id']) && !empty($_GET['cat_id']))
 		{
@@ -84,6 +91,7 @@ class supplierController extends commonController
 		$supplier_fax       = in( $_POST['supplier_fax'] );       //传真
 		$supplier_email     = in( $_POST['supplier_email'] );  //电子邮箱
 		$supplier_desc      =  $_POST['supplier_desc'] ;     //公司描述
+		$user_id   = U::$userdata['user_id']; //负责人姓名
 
 		if ( empty($supplier_name) || strlen($supplier_name) < 3)
 		{
@@ -105,6 +113,7 @@ class supplierController extends commonController
 							'supplier_fax' 	        => $supplier_fax,
 							'supplier_email' 	    => $supplier_email,
 							'create_time' 	    => time(),
+					        'create_by' 	    => $user_id,
 							'supplier_desc' 	    => $supplier_desc
 			);
 			if ($this->supplier->insert($data_ary) !== FALSE)
