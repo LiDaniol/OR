@@ -1,0 +1,93 @@
+<div class="pageContent">
+	<form method="post" action="{url('partner/addPlace')}" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxRefresh);">
+	<input type="hidden" name="comp_id" value="{$comp_info['comp_id']}"/>
+		<div class="pageFormContent" layoutH="57">
+			<dl>
+				<dt>公司名称：</dt>
+				<dd>{$comp_info['comp_name']}</dd>
+			</dl>
+			<dl>
+				<dt>详细地址：</dt>
+				<dd>{$comp_info['comp_addr']}</dd>
+			</dl>
+			<dl>
+				<dt>负责人：</dt>
+				<dd>{$comp_info['comp_manager']}</dd>
+			</dl>
+			<?php if($comp_place){?>
+            <div class="divider"></div>
+             <table class="table" width="100%" height="350px" >
+                <thead>
+                  <tr>
+                  <th width="250" orderField="comp_name" >通用名称</th>
+                    <th width="250" orderField="comp_name" >场所名称</th>
+                    <th width="400" orderField="comp_addr" >描述</th>
+                    <th width="277" align="center">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                 {loop $comp_place $v}
+                  <tr target="sid_node" rel="{$v['cp_id']}">
+                  	<td>{$v['gp_name']}</td>
+                    <td>{$v['cp_name']}</td>
+                    <td>{$v['cp_desc']}</td>
+                    <td>
+                    	<a href="{url('partner/editCompPlace')}&cp_id={$v['cp_id']}" mask="true" target="dialog" rel="editCompPlace" width="500" height="350">编辑</a> | 
+                      <a href="{url('partner/delCompPlace')}&cp_id={$v['cp_id']}" callback="dialogAjaxRefresh" target="ajaxTodo" width="700" height="500" title="你确定要删除所选的场所吗？">删除</a>
+                    </td>
+                  </tr>
+                  {/loop}
+                </tbody>
+              </table>
+            <?php }?>
+            <div class="divider"></div>
+      		<div class="tabs">
+	            <div class="tabsHeader">
+	                <div class="tabsHeaderContent">
+	                    <ul>
+	                        <li><a href="javascript:void(0)"><span>场所配置</span></a></li>
+	                    </ul>
+	                </div>
+	            </div>
+                  <div class="tabsContent" style="height: 350px;">
+                  <div>
+                      <table class="list nowrap itemDetail" addButton="添加一个场所" width="100%" onclick="test();">
+                          <thead>
+                              <tr>
+                                  <th type="enum" name="gp_id[]" enumUrl="{url('partner/get_general_place')}" size="54">通用名称</th>
+                                  <th type="text" ajaxUrl="{url('partner/valid')}" name="cp_name[]" size="30" fieldClass="required">名称</th>
+                                  <th type="text" name="cp_desc[]" size="30">描述</th>
+                                  <th type="del" width="60">操作</th>
+                              </tr>
+                          </thead>
+                          <tbody></tbody>
+                      </table>
+                  </div>
+              </div>
+              <div class="tabsFooter">
+                  <div class="tabsFooterContent"></div>
+              </div>
+			</div>			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+
+<script type="javascript">
+    //$(document).ready(function(){
+//		alert('xxxxx');
+//		$('.buttonContent').click(function(){
+//			alert('123456789');
+//			$('.readonly').attr("readonly","readonly");						   
+//		})
+//  		
+//	});
+	window.onload = function() { 
+     alert('xxxxx');
+}; 
+</script>              

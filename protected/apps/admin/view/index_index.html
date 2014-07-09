@@ -1,0 +1,60 @@
+	<div id="layout">
+		<div id="header">
+			<div class="headerNav">
+				<!-- <a class="logo" href="__APP__">Logo</a> -->
+				<ul class="nav">
+				<li><span style="color:#B9CCDA">{$user_realname} &nbsp;{$user_name}</span></li>
+				<!-- 
+					<li><a href="{url('index/main')}" target="dialog" width="580" height="360" rel="sysInfo">系统消息</a></li>
+					--><li><a href="{url('accessrights/changepwd')}" target="dialog" mask="true">修改密码</a></li>
+				<!-- <li><a href="{url('user/edit')}&uid={$uid}" target="dialog" mask="true">修改资料</a></li>
+					 -->
+					<li><a href="{url('login/logout')}">退出</a></li>
+				</ul>
+				<ul class="themeList" id="themeList">
+				
+					<li theme="default"><div class="selected">蓝色</div></li>
+					<li theme="green"><div>绿色</div></li>
+					<li theme="purple"><div>紫色</div></li>
+					<li theme="silver"><div>银色</div></li>
+					<li theme="azure"><div>天蓝</div></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div id="leftside">
+			<div id="sidebar_s">
+				<div class="collapse">
+					<div class="toggleCollapse"><div></div></div>
+				</div>
+			</div>
+			
+			<div id="sidebar">
+				{include file="left_menu"}
+			</div>
+		</div>
+
+		<div id="container">
+			<div id="navTab" class="tabsPage">
+				<div class="tabsPageHeader">
+					<div class="tabsPageHeaderContent"><!-- 显示左右控制时添加 class="tabsPageHeaderMargin" -->
+						<ul class="navTab-tab">
+							<li tabid="main" class="main"><a href="javascript:void(0)"><span><span class="home_icon">我的主页</span></span></a></li>
+						</ul>
+					</div>
+					<div class="tabsLeft">left</div><!-- 禁用只需要添加一个样式 class="tabsLeft tabsLeftDisabled" -->
+					<div class="tabsRight">right</div><!-- 禁用只需要添加一个样式 class="tabsRight tabsRightDisabled" -->
+					<div class="tabsMore">more</div>
+				</div>
+				<ul class="tabsMoreList">
+					<li><a href="javascript:void(0)">我的主页</a></li>
+				</ul>
+				<div class="navTab-panel tabsPageContent layoutBox">
+					<div class="page unitBox">
+					  <h1 style="padding-top:200px;"><center>管理系统</center></h1>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>		

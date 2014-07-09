@@ -1,0 +1,39 @@
+<div class="pageContent">
+	<form method="post" action="{url('caigou/add')}" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);" novalidate="novalidate">
+		<div class="pageFormContent" layoutH="57">
+						<dl>
+				<dt>供应商：</dt>
+				<dd>
+				<input class="required" name="choose2.sup_id" id="sup_id" type="hidden" size="20"  value="" />
+				<input class="required" name="choose2.sup_name" id="sup_name" type="text" size="25"  value="" readonly="true"/>
+				<a lookupgroup="choose2" class="button" href="{url('supplier/chooseup')}"  mask="true" title="选择供应商" height="580" width="1000"><span>选择</span></a>
+				
+				</dd>
+			</dl>
+						<dl style="width:500px;">
+				<dt>订单编号：</dt>
+				<input class="required" name="choose.order_id" id="cus_id" type="hidden" size="20"  value="" />
+				<input class="required" name="choose.order_no" id="cus_name" type="text" size="25"  value="" readonly="true"/>
+				<a lookupgroup="choose" class="button" href="{url('extras/chooseup')}"  mask="true" title="选择订单" height="580" width="1000"><span>选择订单</span></a>
+			</dl>	
+			<dl>
+				<dt>产品品名/信息 ：</dt>
+				<dd><input  class="required" name="item" type="text" size="25"  value="" /></dd>
+			</dl>
+			<dl>
+				<dt>采购金额：</dt>
+				<dd><input  class="required" name="price" type="text" size="25"  value="" /></dd>
+			</dl>
+			<dl class="nowrap">
+				<dt>备注：</dt>
+				<dd><textarea cols="40" rows="5" name="description"></textarea></dd>
+			</dl>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>

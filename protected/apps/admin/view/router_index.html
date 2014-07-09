@@ -1,0 +1,160 @@
+<div class="pageHeader">
+  <form  id="routersearchForm" name="routersearchForm" onsubmit="return navTabSearch(this);" action="{url('router/index')}" method="post" rel="routerpagerForm">
+	<div class="searchBar">
+	  <ul class="searchContent">
+		<li>
+		  <label>订单编号：</label>
+		  <input type="text" name="sOrderNo" id="sOrderNo" class="medium" value="{$sOrderNo}">
+		</li>
+		<!-- 网关id查询 -->
+		<li>
+		  <label>商品名称：</label>
+		  <input type="text" name="sItem" id="sItem" class="medium" value="{$sItem}">
+		</li>
+		<li>
+		  <label>状态：</label>
+		  <select id="order_status" name="order_status">
+		  	<option value=""  {if $s_order_status == '3'} selected="selected" {/if}>全部</option>
+		  	<option value="1" {if $s_order_status == '1'} selected="selected" {/if}>待审核</option>
+		  	<option value="2" {if $s_order_status == '2'} selected="selected" {/if}>已审核</option>
+		  </select>
+		</li>	
+	    <!-- 路由添加时间查询 -->
+	    <li style="width:400px">
+		  	<label>添加时间：</label>
+			<input id="c_startdate" class="text" type="text" readonly="readonly" name="c_startdate" value="{$c_startdate}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+			至
+			<input id="c_enddate" class="text" type="text" readonly="readonly" name="c_enddate" value="{$c_enddate}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+		</li>	  </ul>
+	  <div class="subBar">
+		<ul>
+		  <li>
+            <div class="buttonActive">
+              <div class="buttonContent">
+                <button type="submit" id="submit_router">查询</button>
+              </div>
+            </div>
+            <div class="buttonActive" style="margin-left:10px;">
+              <div class="buttonContent" >
+                <button type="button" onclick="all_search_router();">显示所有</button>
+              </div>              
+           </div>
+          </li>
+		</ul>
+	  </div>
+	</div>
+    </form>
+    <form name="frm_export" id="frm_export" action="{url('router/export')}" method="post" rel="frm_export">
+        <input type="hidden"  name="gwId" id="gwId" value="{$s_gw_id}"/>
+        <input type="hidden"  name="router_name" id="router_name" value="{$s_router_name}"/>
+        <input type="hidden"  name="startdate" id="startdate" value="{$startdate}"/>
+        <input type="hidden"  name="enddate" id="enddate" value="{$enddate}"/>
+        <input type="hidden"  name="c_startdate" id="c_startdate" value="{$c_startdate}"/>
+        <input type="hidden"  name="c_enddate" id="c_enddate" value="{$c_enddate}"/>
+        <input id="exportChoose" style="display:none;" type="submit"  name="out_excel" value="导出选中">
+    </form>
+</div>
+<div class="pageContent">
+  <div class="panelBar">
+	<ul class="toolBar">
+	
+	  <li><a class="add" href="{url('router/add')}" target="dialog" mask="true" rel="routerListAdd" title="下单" height="300" width="750"><span>下单</span></a></li>
+	 <!--  <li><a class="add" href="javascript:void(0);" onclick="check_out();" rel="routerListExport" title="导出" ><span>导出数据</span></a></li>
+	 --></ul>
+  </div>
+  <table class="table" width="100%" layoutH="138">
+	<thead>
+		<tr>
+			<th width="80" orderField="orderno" class="{$orderno_orderDirection}" >订单编号</th>
+            <th width="140"  >产品品名/信息 </th>
+			<th width="100" >订单美金金额</th>
+			<th width="100" >下单客户</th>
+			<th width="40" >业务员</th>
+			<th width="60"  >下单时间</th>
+			<th width="60"  >预计交货时间</th>
+			<th width="60"  >采购成本</th>
+			<th width="60"  >利润(RMB)</th>
+			<th width="60"  >其他支出</th>
+			<th width="40"  >订单状态</th>
+			<th width="40"  >审核状态</th>
+            <th width="100" >备注</th>
+            <th width="80" >操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{loop $routers $router}
+        <?php
+        $oS = array('1'=>'新订单','2'=>'已完成');
+        $aS = array('1'=>'待审核','2'=>'审核通过');
+        $order_status = $oS[$router['order_status']];
+        $audit_status = $aS[$router['audit_status']];
+        ?>
+		<tr target="sid_node">
+            <td>{$router['orderno']}</td>
+            <td>{$router['item']}</td>
+            <td>{$router['price']}</td>
+            <td>{$router['customer']}</td>
+            <td>{$router['user_name']}</td>
+            <td>{$router['create_time']}</td>
+            <td>{$router['pre_time']}</td>
+            <td >
+            <a href="{url('router/caigoulist')}&id={$router['id']}" rel="caigoulist_{$router['id']}" title="采购单列表" mask="true" target="dialog"  height="500" width="1200" style="color:blue;">
+                {$router['facroty_price']}
+                 </a>
+            </td>
+            <td style="color:red;">{$router['en_price']}</td>
+            <td>
+            {$router['other_price']}
+            </td>
+            <td>{$order_status}</td>
+            <td>{$audit_status}</td>
+            <td>{$router['description']}</td>
+            <td>
+            {if $router['audit_status']==1}
+              <a href="{url('router/edit')}&id={$router['id']}" rel="router_list_edit_{$router['id']}" mask="true" target="dialog" height="600" width="750">编辑</a> |
+              <a href="{url('router/del')}&id={$router['id']}" rel="router_list_del_{$router['id']}" target="ajaxTodo" width="700" height="500" title="你确定要删除所选的吗？">删除</a>|
+              <a href="{url('router/otherpricelist')}&id={$router['id']}" rel="otherpricelist_{$router['id']}" title="其他支出明细" mask="true" target="dialog"  height="500" width="1200">
+                                              查看支出明细
+              </a>
+            {/if}
+            </td>
+		</tr>
+      {/loop}
+	</tbody>
+  </table>
+  <div class="panelBar">
+	<div class="pages">
+		<span>每页显示</span>
+			<select class="combox"  name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value});">
+				<option value="20"  {if $numPerPage == 20}  selected="selected"  {/if}>20</option>
+				<option value="50"  {if $numPerPage == 50}  selected="selected"  {/if}>50</option>
+				<option value="100" {if $numPerPage == 100} selected="selected"  {/if}>100</option>
+				<option value="200" {if $numPerPage == 200} selected="selected"  {/if}>200</option>
+			</select>
+		<span>条，共{$totalCount}条</span>
+	</div>
+	<form id="pagerForm"  action="{url('router/index')}" method="post">
+      <input type="hidden" name="pageNum" value="1" /><!--【必须】value=1可以写死-->
+	  <input type="hidden" name="numPerPage" value="{$numPerPage}" />
+      <input type="hidden" name="orderField" value="{$orderField}" /><!--【可选】查询排序-->
+      <input type="hidden" name="currentPage" value="{$pageNum}" /><!--当前页-->
+	  <input type="hidden" name="orderDirection" value="{$orderDirection}" /><!-- 【可选】升序降序 -->  
+	</form>
+	<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="{$pageNumShown}" currentPage="{$pageNum}"></div>
+  </div>
+</div>
+<script type="text/javascript">
+	function all_search_router(){
+		$("#sOrderNo").val('');
+		$("#c_startdate").val('');
+		$("#c_enddate").val('');
+		$("#sItem").val('');
+		$("#submit_router").click();
+	}
+	function check_out(){
+		if(confirm("你确定要导出此次显示的数据吗?")){
+			var s_gw_id=document.getElementById("gw_id").value;
+			document.getElementById('exportChoose').click();
+	    }
+	}   
+</script>

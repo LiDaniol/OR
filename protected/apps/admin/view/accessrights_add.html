@@ -1,0 +1,140 @@
+<div class="pageContent">
+  <form method="post" action="{url('accessrights/insert')}" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone)">
+	<div class="pageFormContent" layoutH="58">
+<!--       <div class="unit">
+		<label>用户名：</label>
+		<input  name="user_name" id="user_name" type="text" class="required focus" size="50" remote="{url('accessrights/gw_id_check')} >
+	  </div> -->
+  	  <dl>
+		  <dt>用户名：</dt>
+          <dd><input remote="{url('accessrights/checkUser')}" class="required focus" name="user_name" type="text" size="50"  value="" /></dd>
+	  </dl>
+      <dl>
+		<dt>密    码：</dt>
+        <dd><input type="password" value="" alt="字母、数字、下划线 6-20位" maxlength="20" minlength="6" class="required alphanumeric textInput valid" name="user_password" id="w_validation_pwd"></dd>
+	  </dl>
+      <dl>
+		<dt>确认密码：</dt>
+        <dd><input type="password" equalto="#w_validation_pwd" class="required textInput valid" name="password"></dd>
+	  </dl>
+      <div class="divider"></div>
+      <div class="unit">
+		<label>姓  名：</label>
+        <input  name="user_realname" type="text" class="required focus" size="50"> 
+	  </div>
+
+      <div class="unit">
+		<label>员工编号：</label>
+        <input  name="user_emp_no" type="text" class="required focus" size="50"> 
+	  </div>
+      <div class="unit">
+		<label>性  别：</label>
+        <label><input type="radio" name="user_gender" value="0" checked="checked"> 男  </label> <label> <input type="radio" name="user_gender" value="1"> 女 </label>
+	  </div>
+
+       <div class="unit">
+		<label>手  机：</label>
+		<input class="digits" name="user_mobile" type="text" size="50"> 
+	  </div>
+      <div class="unit">
+		<label>固定电话：</label>
+		<input name="user_phone" type="text" size="50"> 
+	  </div>
+      <div class="unit">
+		<label>E-mail：</label>
+		<input class="email" name="user_email" type="text" size="50"> 
+	  </div>
+      <div class="unit">
+		<label>地  址：</label>
+		<input  name="user_address" type="text" size="50"> 
+	  </div>
+      <div class="unit">
+		<label>说 明：</label>
+		<textarea cols="80" rows="5" name="user_desc"></textarea> 
+	  </div>
+     </div>
+      <div class="formBar">
+	  <ul>
+		<li><div class="buttonActive"><div class="buttonContent"><button type="button" onclick="check_form()">保存</button><button type="submit" id="submit" style="display:none;">保存</button></div></div></li>
+		<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+	  </ul>
+	</div>
+   </form>
+</div>
+
+<script type="text/javascript">
+function checkUser(){
+	//var user=$("#user_name").val();
+	var url = "{url('accessrights/checkUser')}";
+	$.ajax({ 
+		async: false,
+		type: "GET", 
+		url: url,
+		data: "user_name=" + $('#user_name').val(),
+		dataType: "json",
+		success: function (msg) {
+			if(msg == 1){
+				$("#user_name").addClass("error");
+				$("#checkuser").html("<font color='red'>用户名已经存在!</font");
+			} else {
+				$("#user_name").removeClass("error");
+				$("#checkuser").html("");	
+			}
+		}
+	});	
+}
+
+function check_form(){
+	if($('.fileName').length!=0){
+		$('#uploadify1').uploadifyUpload();
+	}else{
+		for_check();
+	}
+}
+
+function for_check(){
+	$('#submit').click();
+}
+
+function  uploadifyAllComplete1(event , data ){
+	if (data.errors) {
+		var  msg  = "The total number of files uploaded: " +data.filesUploaded +"\n"
+		+ "The total number of errors while uploading: "+data.errors+"\n"
+		+ "The total number of bytes uploaded: " +data.allBytesLoaded+"\n"
+		+ "The average speed of all uploaded files: "+data.speed ;
+		alert("event:"  + event + "\n" + msg);
+	}
+	for_check();
+}
+
+function  uploadifyComplete1 (event , queueId , fileObj , response, data ){
+	DWZ.ajaxDone(DWZ.jsonEval(response));
+	var obj = DWZ.jsonEval(response);
+	if (typeof obj.data != "undefined") {
+		var obj1 = DWZ.jsonEval(obj.data);
+		if (typeof obj1.src != "undefined") {
+			$("#ban_file").val(obj1.src);
+		}
+	}
+}
+
+function  uploadifyError (event , queueId , fileObj , errorObj){
+	$('#uploadify').uploadifyClearQueue();
+}
+
+function uploadifySelect(event, queueId, fileObj) {
+	//$('#preView').attr('alt', '请选择图片区域');
+}
+
+$(function(){
+	$("#thumbSrc").change(function(){
+		if($(this).children('option:selected').val() != "") {
+			$("#thumb")
+			.attr('src', $(this).children('option:selected').val())
+			.show();
+		} else {
+			$("#thumb").hide();
+		}
+	});
+});
+</script>

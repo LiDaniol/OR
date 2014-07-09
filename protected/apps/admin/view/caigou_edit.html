@@ -1,0 +1,37 @@
+<div class="pageContent">
+	<form method="post" action="{url('caigou/edit')}" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);">
+		<div class="pageFormContent" layoutH="57">
+		<input type="hidden" name="id" value="{$data['id']}"/>
+			<dl>
+				<dt>供应商：</dt>
+				<dd>
+				{$data['sup_name']}
+				</dd>
+			</dl>
+			<dl style="width:500px;">
+				<dt>订单编号：</dt>
+				<dd>
+				{$data['order_no']}
+				</dd>
+			</dl>			
+			<dl>
+				<dt>产品品名/信息 ：</dt>
+				<dd><input  class="required" name="item" type="text" size="25"  value="{$data['item']}" /></dd>
+			</dl>
+			<dl>
+				<dt>采购金额：</dt>
+				<dd><input  class="required" name="price" type="text" size="25"  value="{$data['price']}" /></dd>
+			</dl>
+			<dl class="nowrap">
+				<dt>备注：</dt>
+				<dd><textarea cols="40" rows="5" name="description">{$data['description']}</textarea></dd>
+			</dl>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,94 @@
+<div class="pageContent">
+	
+		<div class="pageFormContent" layoutH="58">
+			<div class="unit">
+				<label>用户名：</label>
+				<input type="text" name="user" id="user" size="30" class="required"/>
+			</div>
+			<div class="unit">
+				<label>密码：</label>
+				<input type="password" name="password" id="password" size="30" class="required"/>
+			</div>
+			<div class="unit">
+				<label>验证码：</label>
+				<input size="4" maxlength="4" id="checkcode" type="text" name="checkcode" />
+				 <img src="#" alt="请点更换图片" width="50" height="25" border="0" align="top" id="verifyImg" style="margin-left:3px;display: none;" onClick="fleshVerify()"/>
+			</div>
+			<div class="unit">
+				<div id="error_div" style="color:red; text-align:center;"></div>
+			</div>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" class="submit" id="submit" onClick="post_login()">提交</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+
+	
+</div>
+    <script>
+    function error_tips(msg){
+    	$('#error_div').html(msg);
+    }
+      //重载验证码
+      function fleshVerify()
+      {
+          var timenow = new Date().getTime();
+          document.getElementById('verifyImg').src= '{url( 'login/verify' )}&time='+timenow;
+      }
+      $('#checkcode').focus(function(){
+    		if($('#verifyImg').attr('src') == '#') {
+    			$('#verifyImg').show();
+    			fleshVerify();
+    		}
+    	});
+      //ajax登录
+      function post_login(){
+      	var uName=$.trim($('#user').val());
+   		var pwd=$.trim($('#password').val());
+   		var valid=$.trim($('#checkcode').val());
+   		if(uName==""){
+   			error_tips('用户名不能为空');return ;
+   		}
+   		if(pwd==""){
+   			error_tips('密码不能为空');return ;
+   		}
+   		if(valid==""){
+   			error_tips('请输入验证码');return ;
+   		}
+   		
+          $('#submit')
+              .removeClass('submit')
+              .html('<img src="__PUBLIC__/images/loading_small.gif" alt="正在登录..." />')
+              .attr('disabled',"true");
+          //ajax提交
+          $.ajax({
+              type: 'POST',
+              url: "{url('login/login')}",
+              data:{user: uName,password: pwd,checkcode:valid},
+              dataType: "json",
+              success: function(json) {
+      	        if(json.code==1) {
+                      // success
+                      //window.location.href="{url('index/index')}";
+                      $.pdialog.closeCurrent();
+      	        } else {
+                      if (json.msg == '验证码错误') {
+                          fleshVerify();
+                      }
+                      error_tips(json.msg);
+                      $('#submit')
+                          .addClass('submit')
+                          .html('登录')
+                          .removeAttr('disabled');
+      	        }	
+              }
+          })
+      }
+      document.onkeydown = function (e) {
+    		var theEvent = window.event || e;
+    		var code = theEvent.keyCode || theEvent.which;
+    		if (code == 13) { $("#submit").click(); }
+    	}
+      </script>

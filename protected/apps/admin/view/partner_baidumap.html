@@ -1,0 +1,155 @@
+<div class="pageContent" style="margin-top:-20px;">
+<script  type="text/javascript">
+// 异步加载地图
+function loadScript() {
+  var script = document.createElement("script");
+  script.src = "http://api.map.baidu.com/api?v=1.2&callback=initialize";
+  document.body.appendChild(script);
+}
+loadScript();
+</script>
+<style type="text/css">
+.anchorBL{
+	display:none;
+}
+</style>
+<!--搜索提示框CSS -->
+<style type="text/css">
+  .suggestionsBox1 {
+	  position:absolute;
+	  width: 218px;
+	  border: 1px solid gray;
+	  color: #fff;
+	  margin: 0 0 0 94px;
+	  top:54px;
+	  color: #000;
+	  padding: 2px;
+	  font-size: 15px;
+	  background-color: white;
+	  z-index: 99;
+  }
+  .suggestionsBox2 {
+	  position:absolute;
+	  width: 218px;
+	  border: 1px solid gray;
+	  color: #fff;
+	  margin:0 0 0 374px;
+  	  top:54px;
+	  color: #000;
+	  padding: 2px;
+	  font-size: 15px;
+	  background-color: white;
+	  z-index: 99;
+  }
+  .suggestionList {
+	  margin: 0px;
+	  padding: 0px;
+  }
+
+  .suggestionList li {
+  	cursor: pointer;
+  }
+
+  .suggestionList li:hover {
+  	background-color: #659CD8;
+  }
+  .suggestionList ul {
+	  list-style-type: none;
+	  font-size: 12px;
+	  line-height: 20x;
+	  margin: 0 0 0 4px;
+  }
+  .text {
+  	height: 40px;
+  }
+</style>
+</head>
+<body class="pos_r" oncontextmenu='return false' onselectstart ='return false' ondragstart ='return false' onselect='document.selection.empty()' oncopy='document.selection.empty()' onbeforecopy='return false'>
+<div class="Zrailway">
+	<div class="ZrBBD" style="height:805px;margin-top:15px;">
+		<div class="ZrSBD" style="height:702px;margin-top:10px;">
+			<div class=" fl_l" style="width:868px;border:1px solid #ccc;"><div id="map" style="width:868px;height:700px;"></div></div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+function initialize() {
+    var map = new BMap.Map("map"); // 创建地图实例
+    var oldXPoint;
+    var oldYPoint;
+    var oldXPoint = document.getElementById('x_location').value;
+    var oldYPoint = document.getElementById('y_location').value;
+    var business_name = document.getElementById('comp_name').value;
+    var contact_name = document.getElementById('comp_manager').value;
+    var business_addr = document.getElementById('comp_addr').value;
+    var phone = document.getElementById('comp_phone').value;
+    var mobile = document.getElementById('comp_mobile').value;
+	var x = document.getElementById('w_combox_area');
+	var area_name = x.options[x.selectedIndex].text;
+    if(area_name == "市辖区")
+	 {
+	  var x = document.getElementById('w_combox_city');
+	  var area_name = x.options[x.selectedIndex].text;
+	 }
+    if (oldXPoint.length != 0 && oldYPoint.length != 0) {
+        map.centerAndZoom( new BMap.Point(oldXPoint, oldYPoint), "16" );
+        addMarker(new BMap.Point(oldXPoint, oldYPoint), 1);
+        addInfo(new BMap.Point(oldXPoint, oldYPoint));
+    } else {
+        map.centerAndZoom( area_name, "16" );
+    }
+    map.addControl(new BMap.NavigationControl());
+    //map.addControl(new BMap.ScaleControl()); // 标尺
+    //map.addControl(new BMap.OverviewMapControl()); // 右下角缩略图
+    //map.addControl(new BMap.MapTypeControl()); // 地图类型的选择
+    //map.setMapType(BMAP_PERSPECTIVE_MAP); //修改地图类型为3D地图
+    
+    function addMarker(point, index){  
+        // 创建图标对象  
+        var myIcon = new BMap.Icon("__PUBLIC__/images/location.png", new BMap.Size(31, 25), {  
+            // 指定定位位置。  
+            // 当标注显示在地图上时，其所指向的地理位置距离图标左上  
+            // 角各偏移10像素和25像素。您可以看到在本例中该位置即是  
+            // 图标中央下端的尖角位置。  
+            offset: new BMap.Size(31, 25),  
+            // 设置图片偏移。  
+            // 当您需要从一幅较大的图片中截取某部分作为标注图标时，您  
+            // 需要指定大图的偏移位置，此做法与css sprites技术类似。  
+            imageOffset: new BMap.Size(0, 0)   // 设置图片偏移  
+        });    
+        // 创建标注对象并添加到地图  
+        var marker = new BMap.Marker(point, {icon: myIcon});  
+        map.addOverlay(marker);
+        marker.enableDragging(); // 允许拖拽
+        marker.addEventListener("dragend", function(e){
+            savePoint(e.point.lng, e.point.lat);
+        });
+    } 
+
+    function addInfo(point) {
+        var opts = {  
+            width : 250,     // 信息窗口宽度  
+            height: 100,     // 信息窗口高度  
+            title : "<font color='red' size='3px'><strong>" + business_name + '</strong></font>'  // 信息窗口标题
+        }
+        var infoWindow = new BMap.InfoWindow("商家名称: " + business_name +"<br>联系人: " + contact_name + "<br>电话: " + phone + "<br>手机: " + mobile, opts);  // 创建信息窗口对象  
+        map.openInfoWindow(infoWindow, point);      // 打开信息窗口
+    }
+    
+    // 监听鼠标点击事件                 
+    map.addEventListener("click", function(e){
+        savePoint(e.point.lng, e.point.lat);
+    });
+
+    function savePoint(lng, lat) {
+        if ( 
+		     confirm("确定是这里吗?") ) {
+             document.getElementById('x_location').value = lng;
+             document.getElementById('y_location').value = lat;
+             $.pdialog.closeCurrent();
+        }
+    }    
+}
+</script>
+</div>
+

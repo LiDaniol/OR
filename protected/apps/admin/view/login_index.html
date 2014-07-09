@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{config('SITENAME')}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/style.css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/login.css" />
+    <script src="__PUBLIC__/dwz/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/asyncbox/asyncbox.min.js?skin=default"></script>
+    <script>
+      //重载验证码
+      function fleshVerify()
+      {
+          var timenow = new Date().getTime();
+          document.getElementById('verifyImg').src= '{url( 'login/verify' )}&time='+timenow;
+      }
+      $(function(){
+          $('#checkcode').focus(function(){
+              if($('#verifyImg').attr('src') == '#') {
+                  $('#verifyImg').show();
+                  fleshVerify();
+              }
+          })});
+              
+    //ajax登录
+    function post_login(){
+    	var uName=$.trim($('#user').val());
+ 		var pwd=$.trim($('#password').val());
+ 		var valid=$.trim($('#checkcode').val());
+ 		if(uName==""){
+ 			asyncbox.error('用户名不能为空','Error');return ;
+ 		}
+ 		if(pwd==""){
+ 			asyncbox.error('密码不能为空','Error');return ;
+ 		}
+ 		if(valid==""){
+ 			asyncbox.error('请输入验证码','Error');return ;
+ 		}
+ 		
+        $('#submit')
+            .removeClass('submit')
+            .html('<img src="__PUBLIC__/images/loading_small.gif" alt="正在登录..." />')
+            .attr('disabled',"true");
+        //ajax提交
+        $.ajax({
+            type: 'POST',
+            url: "{url('login/login')}",
+            data:{user: uName,password: pwd,checkcode:valid},
+            dataType: "json",
+            success: function(json) {
+    	        if(json.code==1) {
+                    // success
+                    window.location.href="{url('index/index')}";
+    	        } else {
+                    if (json.msg == '验证码错误') {
+                        fleshVerify();
+                    }
+    	            asyncbox.error(json.msg,'Error');
+                    $('#submit')
+                        .addClass('submit')
+                        .html('登录')
+                        .removeAttr('disabled');
+    	        }	
+            }
+        })
+    }
+    
+    </script>
+
+    <script type="text/javascript"> 
+      document.onkeydown = function (e) { 
+          var theEvent = window.event || e; 
+          var code = theEvent.keyCode || theEvent.which; 
+          if (code == 13) { $("#submit").click(); } 
+      } 
+    </script> 
+
+    <style>
+      html {
+	  height:100%;
+      }
+    </style>
+  </head>
+
+  <body id="login_body">
+    <div id="login">
+      <h1><center>订单管理系统</center></h1>
+      <div id="login_content">
+        <label>用户名：</label>
+        <div>
+          <input class="ui-widget-content ui-corner-all" name="user" type="text" id="user"  x-webkit-speech >
+        </div>
+        <label>密&nbsp;&nbsp;码：</label>
+        <div>
+          <input class="ui-widget-content ui-corner-all" name="password" type="password" id="password" >
+        </div>      
+        <div id="login_foot">
+          <div style="float:left; margin-top:0px;">
+            <label style="float:left">验证码：</label>
+            <input class="ui-widget-content ui-corner-all" style="float:left;" value="" size="4" maxlength="4" id="checkcode" type="text" name="checkcode" reg="." />
+            <div style="width: 50px; float:right;margin-left:5px;">
+              <img src="#" alt="请点更换图片" width="50" height="25" border="0" align="top" id="verifyImg" style="margin-left:3px;display: none;" onClick="fleshVerify()"/>              
+            </div>
+          </div>
+          <div align="center">
+            <button class="submit" id="submit" onClick="post_login()" >登录</button>
+          </div>
+        </div>
+      </div>
+      <div id="copyright">{config('COPYRIGHT')}</div>
+    </div>    
+  </body>
+</html>

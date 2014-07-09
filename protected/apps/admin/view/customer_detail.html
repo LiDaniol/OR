@@ -1,0 +1,263 @@
+<style type="text/css">
+	dt{
+		width:90px !important;
+	}
+	p label{
+		width:90px !important;
+	}
+</style>
+<script  type="text/javascript">
+// 异步加载地图
+function loadScript() {
+  var script = document.createElement("script");
+  script.src = "http://api.map.baidu.com/api?v=1.2&callback=initialize";
+  document.body.appendChild(script);
+}
+loadScript();
+</script>
+<div class="pageContent">
+    <div class="tabs" currentIndex="0" eventType="click">
+            <div class="tabsHeader">
+                <div class="tabsHeaderContent">
+                    <ul>
+                        <li><a href="javascript:;"><span>公司详情</span></a></li>
+                        <li><a href="javascript:;"><span>地图标注</span></a></li>
+                       <!-- <li><a href="javascript:;"><span>数据库配置</span></a></li>-->
+                       <!--  <li><a href="javascript:;"><span>场所配置</span></a></li> -->
+                    </ul>
+                </div>
+            </div>
+            <div class="tabsContent" style="height:515px;">
+                <div>
+                    <input type="hidden" name="comp_id" value="{$comp_info['comp_id']}"/>
+                        <div class="pageFormContent" layoutH="55" style="height:485px">
+                            <dl>
+                                <dt>公司名称：</dt>
+                                <dd>{$comp_info['comp_name']}</dd>
+                            </dl>
+                            <dl>
+                                <dt>公司分类：</dt>
+                                <dd><select name="cat_id" disabled="disabled">
+                            <option value="0">所有分类</option>
+                            {$cat_list}
+                          </select></dd>
+                            </dl>
+							<dl class="nowrap" style="width:680px;" >
+								<dt>Logo：</dt>
+								<dd style="width:500px;height:30px;" class="up_load">
+									<div><img src="{$comp_info['comp_logo']}" style="width:50px;height:30px;"></div>
+								</dd>
+							</dl>                            
+                            <dl style="width:500px;">
+                            <dt>地区：</dt>
+                            <dd style="width: 380px;">
+                            <select disabled="disabled"  name="province" ref="w_combox_city" refUrl="{url('statecity/city')}&city_id={value}">
+                            <option value="0">--请选择省--</option>
+                            {$comp_info['province_list']}
+                            </select>
+                            <select disabled="disabled"  name="city" id="w_combox_city" ref="w_combox_area" refUrl="{url('statecity/area')}&area_id={value}">
+                            <option value="0">--请选择城市--</option>
+                            {$comp_info['city_list']}
+                            </select>
+                            <select disabled="disabled"  name="area" id="w_combox_area">
+                            <option value="0">--请选择区县--</option>
+                            {$comp_info['area_list']}
+                            </select>
+                            </dd>
+                            </dl>
+                            <dl>
+                                <dt>详细地址：</dt>
+                                <dd>{$comp_info['comp_addr']}</dd>
+                            </dl>
+                            <dl style="width:500px;">
+                                <dt>公司网站：</dt>
+                                <dd>{$comp_info['comp_site']}</dd>
+                            </dl>
+                            <p style="width:350px;">
+                                <label>手机号码：</label>
+                                {$comp_info['comp_mobile']}
+                            </p>
+                            <p style="width:350px;">
+                                <label>电话号码：</label>
+                                {$comp_info['comp_phone']}
+                            </p>
+                            <p style="width:350px;">
+                                <label>传真：</label>
+                                {$comp_info['comp_fax']}
+                            </p>
+                            <p style="width:350px;">
+                                <label>邮政编码：</label>
+                                {$comp_info['comp_postcode']}
+                            </p>			
+                            <dl>
+                                <dt>电子邮箱：</dt>
+                                <dd>{$comp_info['comp_email']}</dd>
+                            </dl>
+                            <dl>
+                                <dt>负责人：</dt>
+                                <dd>{$comp_info['comp_manager']}</dd>
+                            </dl>
+                             <dl>
+                                <dt>管理员用户名：</dt>
+                                <dd>{$comp_info['user_name']}</dd>
+                            </dl>
+                            
+                            <dl class="nowrap" style="width:680px;">
+                                <dt>公司描述：</dt>
+                                <dd style="width:400px;">{$comp_info['comp_desc']}</dd>
+                            </dl>
+							<dl class="nowrap" style="width:800px;" >
+								<dt>商家介绍图片：</dt>
+								<dd style="width:700px;">
+									<div style="width:600px;">
+                                    <?php if($comp_info['partner_img']){ ?>
+                                        <div style="width:100px;display:inline-block !important;">
+                                        <img src="{$comp_info['partner_img']}" style="width:80px;height:60px;margin-left:15px;">
+                                        </div>
+                                    <?php }?>
+									</div>
+								</dd>
+							</dl>
+							<dl style="width:800px;height:200px;">
+								<dt>标签：</dt>
+								<dd style="width:600px;">
+									<div class="tabs">
+										<div class="tabsHeader">
+											<div class="tabsHeaderContent">
+												<ul>
+													<li><a href="javascript:void(0)"><span>选择标签</span></a></li>
+												</ul>
+											</div>
+										</div>
+										<div class="tabsContent" style="height: 150px;">
+											<div>
+												<table width="100%">
+													<tbody>
+														<tr>
+							                            	<th>标签名称</th>
+							                                <th>标签说明</th>
+														</tr>
+								                        <?php if($partner_tags){?>
+								                          {loop $partner_tags $v}
+								                        	<tr class="unitBox">
+																<td>
+																	{$v['tag_title']}
+																</td>
+																<td>
+																	{$v['tag_desc']}
+																</td>
+								                           </tr>
+								                           {/loop}
+								                          <?php }?>							
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="tabsFooter">
+											<div class="tabsFooterContent"></div>
+										</div>
+									</div>			
+								</dd>
+							</dl>									
+                        </div>
+                </div>
+                <div>
+                	<div class="Zrailway">
+                        <div class="ZrBBD" style="height:450px;margin-top:15px;">
+                            <div class="ZrSBD" style="height:450px;margin-top:10px;">
+                                <div class=" fl_l" style="width:868px;border:1px solid #ccc;"><div id="map" style="width:868px;height:450px;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <!--  <div>
+                <?php if($comp_place){?>
+                     <table class="table" width="100%" height="350px" >
+                        <thead>
+                          <tr>
+                            <th width="250" orderField="comp_name" >场所名称</th>
+                            <th width="400" orderField="comp_addr" >描述</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {loop $comp_place $v}
+                          <tr>
+                            <td>{$v['cp_name']}</td>
+                            <td>{$v['cp_desc']}</td>
+                          </tr>
+                          {/loop}
+                        </tbody>
+                      </table>
+                    <?php }?>	
+                </div>-->
+            </div>  
+            
+        </div>    
+		<div class="formBar">
+			<ul>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">关 闭</button></div></div></li>
+			</ul>
+		</div>
+</div>
+
+<input type="hidden" name="from_name" id="from_name" value="{$comp_info['comp_name']}">
+     <input type="hidden" name="contact_name" id="contact_name" value="{$comp_info['comp_manager']}">
+     <input type="hidden" name="from_address" id="from_address" value="{$comp_info['comp_addr']}">
+     <input type="hidden" name="from_phone" id="from_phone" value="{$comp_info['comp_phone']}">
+<script type="text/javascript">
+function initialize() {
+    var map = new BMap.Map("map"); // 创建地图实例
+    var oldXPoint = "{$comp_info['x_location']}";
+    var oldYPoint = "{$comp_info['y_location']}";
+    var title = $('#from_name').val();
+	var contact = $('#contact_name').val();
+    var addr = $('#from_address').val();
+    var com_tel = $('#from_phone').val();
+    //alert(oldXPoint);
+    if (com_tel != undefined) {
+    	var tel = com_tel;
+    }
+    
+    if (oldXPoint.length != 0 && oldYPoint.length != 0) {
+        map.centerAndZoom( new BMap.Point(oldXPoint, oldYPoint), 16 );
+        addMarker(new BMap.Point(oldXPoint, oldYPoint), 1);
+        addInfo(new BMap.Point(oldXPoint, oldYPoint));
+    } else {
+        map.centerAndZoom( "深圳市", 16 );
+    }
+    map.addControl(new BMap.NavigationControl());
+    
+    function addMarker(point, index){  
+        // 创建图标对象  
+        var myIcon = new BMap.Icon("__PUBLIC__/images/location.png", new BMap.Size(31, 25), {  
+            // 指定定位位置。  
+            // 当标注显示在地图上时，其所指向的地理位置距离图标左上  
+            // 角各偏移10像素和25像素。您可以看到在本例中该位置即是  
+            // 图标中央下端的尖角位置。  
+            offset: new BMap.Size(31, 25),  
+            // 设置图片偏移。  
+            // 当您需要从一幅较大的图片中截取某部分作为标注图标时，您  
+            // 需要指定大图的偏移位置，此做法与css sprites技术类似。  
+            imageOffset: new BMap.Size(0, 0)   // 设置图片偏移  
+        });    
+        // 创建标注对象并添加到地图  
+        var marker = new BMap.Marker(point, {icon: myIcon});  
+        map.addOverlay(marker);
+        //marker.enableDragging(); // 允许拖拽
+        marker.addEventListener("dragend", function(e){
+            //savePoint(e.point.lng, e.point.lat);
+        });
+    } 
+
+    function addInfo(point) {
+        var opts = {  
+            width : 250,     // 信息窗口宽度  
+            height: 100,     // 信息窗口高度  
+            title : "<font color='red' size='3px'><strong>" + title + '</strong></font>'  // 信息窗口标题
+        }
+        var infoWindow = new BMap.InfoWindow("联系人： "+ contact  +"<br>电话: " + tel+"<br>地址: " + addr, opts);  // 创建信息窗口对象  
+        map.openInfoWindow(infoWindow, point);      // 打开信息窗口
+    }
+   
+}
+</script>

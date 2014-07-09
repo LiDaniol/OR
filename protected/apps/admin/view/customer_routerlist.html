@@ -1,0 +1,118 @@
+<div class="pageHeader">
+  <form  id="searchForm" name="searchForm" onsubmit="return dwzSearch(this, 'dialog');" action="{url('partner/routerlist')}" method="post" rel="pagerForm">
+	<div class="searchBar">
+	  <ul class="searchContent">
+		<li>
+		  <label>用户名：</label>
+		  <input type="hidden" name="id" id="gw_id" value="{$id}"/>
+		  <input type="text" name="userName" id="userName" class="medium" value="{$userName}">
+		</li>
+		<!-- 
+		<li>
+		  <label>关键字：</label>
+		  <input type="text" name="keyword" id="keyword" class="medium" value="{$keyword}">
+		</li>
+		 -->
+		<li style="width:400px">
+		  	<label>连接时间：</label>
+			<input id="startdate" class="text" type="text" readonly="readonly" name="startdate" value="{$startdate}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+			至
+			<input id="enddate" class="text" type="text" readonly="readonly" name="enddate" value="{$enddate}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+		</li>
+	  </ul>
+	  <div class="subBar">
+		<ul>
+		  <li>
+            <div class="buttonActive">
+              <div class="buttonContent">
+                <button type="submit" id="submit_letter">查询</button>
+              </div>
+            </div>
+            <div class="buttonActive" style="margin-left:10px;">
+              <div class="buttonContent" >
+                <button type="button" onclick="all_search_letter();">显示所有</button>
+              </div>              
+           </div>
+          </li>
+		</ul>
+	  </div>
+	</div>
+    </form>
+</div>
+<div class="pageContent">
+	<table class="table" layoutH="118" targetType="dialog" width="100%">
+		<thead>
+			<tr>
+              <th width="40" orderField="username" >网关id</th>
+              <th width="40" orderField="username" >系统更新时间</th>
+              <th width="40" orderField="username" >最新IP</th>
+              <th width="40" orderField="username" >开机时长</th>
+              <th width="40" orderField="username" >空余内存</th>
+              <th width="40" orderField="username" >系统负载</th>
+              <th width="120" orderField="username" >版本号</th>
+              <!-- <th width="120" >操作</th> -->
+			</tr>
+		</thead>
+		<tbody>
+          {loop $result $v}
+        <?php
+           $sys_time = $v['last_heartbeat_sys_uptime'];
+           $day = intval($sys_time/3600/24);
+           $hour = intval(($sys_time - $day*3600*24)/3600);
+           $minute = intval(($sys_time - $day*3600*24 - $hour*3600)/60);
+           $second = ($sys_time - $day*3600*24 - $hour*3600-minute*60)%60;
+           if ( !empty( $day ) || !empty( $hour ) || !empty( $minute ) || !empty( $second ) )
+             $sys_uptime = $day.' 天'.$hour.' 小时'.$minute.' 分钟'.$second.' 秒';
+           else
+             $sys_uptime = '';
+           $memfree = intval($v['last_heartbeat_sys_memfree']/1024);
+           $name = !empty( $v['name'] ) ? $v['name'] : '未知商家';
+        ?>
+			<tr>
+              <td>{$v['gw_id']}</td>
+              <td>{$v['last_heartbeat_at']}</td>
+              <td>{$v['last_heartbeat_ip']}</td>
+              <td>{$sys_uptime}</td>
+              <td>{if !empty($memfree)}{$memfree}M{/if}</td>
+              <td>{$v['last_heartbeat_sys_load']}</td>
+              <td>{$v['last_heartbeat_vertion']}</td>
+<!--               <td>
+              <a>断开上网</a>
+              <a>冻结用户</a>
+              <a>流量控制</a>
+              </td> -->
+
+			</tr>
+          {/loop}
+		</tbody>
+	</table>
+    <div class="panelBar">
+	<div class="pages">
+		<span>每页显示</span>
+			<select class="combox"  name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value});">
+				<option value="20"  {if $numPerPage == 20}  selected="selected"  {/if}>20</option>
+				<option value="50"  {if $numPerPage == 50}  selected="selected"  {/if}>50</option>
+				<option value="100" {if $numPerPage == 100} selected="selected"  {/if}>100</option>
+				<option value="200" {if $numPerPage == 200} selected="selected"  {/if}>200</option>
+			</select>
+		<span>条，共{$totalCount}条</span>
+	</div>
+	<form id="pagerForm" action="{url('partner/routerlist')}" method="post">
+      <input type="hidden" name="pageNum" value="1" /><!--【必须】value=1可以写死-->
+	  <input type="hidden" name="numPerPage" value="{$numPerPage}" />
+      <input type="hidden" name="orderField" value="{$orderField}" /><!--【可选】查询排序-->
+      <input type="hidden" name="currentPage" value="{$pageNum}" /><!--当前页-->
+	  <input type="hidden" name="orderDirection" value="asc" /><!-- 【可选】升序降序 -->  
+	</form>
+	<div class="pagination" targetType="dialog" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="{$pageNumShown}" currentPage="{$pageNum}"></div>
+  </div>
+</div>
+<script type="text/javascript">
+	function all_search_letter(){
+		$("#gw_id").val(0);
+		$("#userName").val('');
+		$("#startdate").val('');
+		$("#enddate").val('');
+		$("#submit_letter").click();
+	}
+</script>

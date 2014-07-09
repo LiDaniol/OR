@@ -1,0 +1,103 @@
+<div class="pageHeader">
+  <form  id="searchForm" name="searchForm" onsubmit="return navTabSearch(this);" action="{url('supplier/index')}" method="post" rel="pagerForm">
+	<div class="searchBar">
+	  <ul class="searchContent">
+<!-- 		<li>
+		  <label>分类：</label>
+		  <select name="cat_id">
+            <option value="0">所有分类</option>
+            {$cat_list}
+          </select>
+		</li> -->
+		
+		<li>
+		  <label>供应商名称：</label>
+		  <input type="text" name="keyword" id="keyword" class="medium" value="{$keyword}">
+		</li>
+	  </ul>
+	  <div class="subBar">
+		<ul>
+		  <li>
+            <div class="buttonActive">
+              <div class="buttonContent">
+                <button type="submit">查询</button>
+              </div>
+            </div>
+          </li>
+		</ul>
+	  </div>
+	</div>
+    </form>
+</div>
+
+<div class="pageContent">
+  <div class="panelBar">
+	<ul class="toolBar">
+	  <li><a class="add" href="{url('supplier/add')}" target="dialog" mask="true" rel="dept_add" title="新增客户" height="600" width="900"><span>新增</span></a></li>
+	</ul>
+  </div>
+
+  <table class="table" width="100%" layoutH="138">
+	<thead>
+	  <tr>
+		<th width="250"  >供应商名称</th>
+        <th width="300"  >详细地址</th>
+        <th width="120"  >联系手机号码</th>
+        <th width="120"  >联系电话号码</th>
+        <th width="120"  >传真</th>
+        <th width="120"  >邮箱</th>
+		<th width="150"  >加入时间</th>
+		<!-- <th width="80"  align="center" >历史采购单数量</th> -->
+		<th width="150" align="center">操作</th>
+		<!--  -->
+	  </tr>
+	</thead>
+	<tbody>
+	  {loop $company_list $v}
+	  <tr target="sid_node" rel="{$v['id']}">
+		<td>{$v['supplier_name']}</td>
+        <td>{$v['supplier_addr']}</td>
+        <td>{$v['supplier_mobile']}</td>
+        <td>{$v['supplier_phone']}</td>
+        <td>{$v['supplier_fax']}</td>
+        <td>{$v['supplier_email']}</td>
+		<td>{$v['create_time']}</td>
+		<!-- <td>
+		</td> -->
+		<td>
+		<a href="{url('supplier/edit')}&supplier_id={$v['id']}" rel="edit_comp" mask="true" target="dialog" height="600" width="900">编辑</a> |  
+        <a href="{url('supplier/del')}&supplier_id={$v['id']}" rel="edit_comp" mask="true" target="ajaxTodo" title="你确定要删除所选的吗？">删除</a>  
+		
+		</td>
+		 <!-- 
+        <td>
+          <a href="{url('partner/del')}&comp_id={$v['comp_id']}" target="ajaxTodo" width="700" height="500" title="你确定要删除所选的公司吗？">删除</a>
+        </td>
+         -->
+	  </tr>
+      {/loop}
+	</tbody>
+  </table>
+
+  <div class="panelBar">
+	<div class="pages">
+		<span>每页显示</span>
+			<select class="combox" id="numPerPage_sel" name="numPerPage_sel" onchange="navTabPageBreak({numPerPage:this.value});">
+				<option value="20">20</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+				<option value="200">200</option>
+			</select>
+		<span>条，共{$totalCount}条</span>
+		<script>$('#numPerPage_sel').val('{$numPerPage}');</script>
+	</div>
+	<form id="pagerForm" name="pagerForm" action="{url('supplier/index')}" method="post">
+      <input type="hidden" name="pageNum" value="1" /><!--  【必须】value=1可以写死  -->
+      <input type="hidden" name="numPerPage" value="{$numPerPage}" />     
+      <input type="hidden" name="orderField" value="{$orderField}" /><!-- 【可选】查询排序  -->
+      <input type="hidden" name="currentPage" value="{$pageNum}" /><!-- 当前页 -->
+	  <input type="hidden" name="orderDirection" value="{$orderDirection}" /><!-- 【可选】升序降序 -->     
+    </form>	
+	<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="{$pageNumShown}" currentPage="{$pageNum}"></div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<style type="text/css">
+	.up_load div{
+		height: 30px !important;
+		display:inline-block !important;
+	}
+	.cancel{
+		display:inline-block !important;
+	}
+	.up_load .uploadifyQueueItem {
+		margin-left: 30px;
+	}
+	dt{
+		width:90px !important;
+	}
+	p label{
+		width:90px !important;
+	}
+</style>
+<div class="pageContent">
+	<form method="post" action="{url('supplier/modify')}" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);">
+	<input type="hidden" name="supplier_id" value="{$comp_info['id']}"/>
+		<div class="pageFormContent" layoutH="57">
+			<dl>
+				<dt>供应商名称：</dt>
+				<dd><input class="required" name="supplier_name" id="supplier_name" type="text" size="30"  value="{$comp_info['supplier_name']}"/></dd>
+			</dl>
+			<dl style="width:500px;">
+				<dt>详细地址：</dt>
+				<dd><input class="required" name="supplier_addr" id="supplier_addr" type="text" size="60" value="{$comp_info['supplier_addr']}" /></dd>
+			</dl>
+			<p style="width:350px;">
+				<label>电话号码：</label>
+				<input class="required" name="supplier_phone" id="supplier_phone" type="text" size="20" value="{$comp_info['supplier_phone']}"/>
+			</p>			
+			<p style="width:350px;">
+				<label>手机号码：</label>
+				<input class="number" name="supplier_mobile" id="supplier_mobile" type="text" size="20" value="{$comp_info['supplier_mobile']}"/>
+			</p>
+			<p style="width:350px;">
+				<label>传真：</label>
+				<input name="supplier_fax" type="text" size="20" value="{$comp_info['supplier_fax']}"/>
+			</p>
+			<dl style="width:500px;">
+				<dt>电子邮箱：</dt>
+				<dd><input class="email" name="supplier_email" type="text" size="60" value="{$comp_info['supplier_email']}" /></dd>
+			</dl>
+			<dl class="nowrap" style="width:680px;">
+				<dt>备注：</dt>
+				<dd style="width:400px;"><textarea name="customer_desc"  style="width:700px;height:250px;">{$comp_info['supplier_desc']}</textarea></dd>
+			</dl>
+            <div class="divider"></div>			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="button" onclick="return check_form();">保存</button><button type="submit" id="submit" style="display:none;">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	var falg=0;
+	var upload_count=0;
+	function check_form(){
+		$('#submit').click();
+		return true;
+	}
+</script>

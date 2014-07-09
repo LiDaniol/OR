@@ -1,0 +1,69 @@
+<div class="pageHeader">
+  <form  id="searchForm" name="searchForm" onsubmit="return dwzSearch(this, 'dialog');" action="{url('supplier/chooseup')}" method="post" rel="pagerForm">
+	<div class="searchBar">
+	  <ul class="searchContent">
+		<li>
+		  <label>供应商名称：</label>
+		  <input type="text" name="keyword" id="keyword" class="medium" value="{$keyword}">
+		</li>
+	  </ul>
+	  <div class="subBar">
+		<ul>
+		  <li>
+            <div class="buttonActive">
+              <div class="buttonContent">
+                <button type="submit">查询</button>
+              </div>
+            </div>
+          </li>
+		</ul>
+	  </div>
+	</div>
+    </form>
+</div>
+
+<div class="pageContent">
+
+  <table class="table" width="100%" layoutH="138">
+	<thead>
+	  <tr>
+			<th width="80" >供应商名称</th>
+            <th width="140"  >地址 </th>
+		<th width="80">点击选择</th>
+	  </tr>
+	</thead>
+	<tbody>
+	{loop $lists $router}
+	  <tr target="sid_node" rel="{$v['id']}">
+            <td>{$router['supplier_name']}</td>
+            <td>{$router['supplier_addr']}</td>
+			  <td>
+				<a class="btnSelect" href=javascript:$.bringBack({sup_name:"{$router['supplier_name']}",sup_id:"{$router['id']}"}) title="点击选择">点击选择</a>
+			  </td>
+	  </tr>
+      {/loop}
+	</tbody>
+  </table>
+
+  <div class="panelBar">
+	<div class="pages">
+		<span>每页显示</span>
+			<select class="combox" id="numPerPage_sel" name="numPerPage_sel" onchange="navTabPageBreak({numPerPage:this.value});">
+				<option value="20">20</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+				<option value="200">200</option>
+			</select>
+		<span>条，共{$totalCount}条</span>
+		<script>$('#numPerPage_sel').val('{$numPerPage}');</script>
+	</div>
+	<form id="pagerForm" name="pagerForm" onsubmit="return dwzSearch(this, 'dialog');" action="{url('supplier/chooseup')}" method="post">
+      <input type="hidden" name="pageNum" value="1" /><!--  【必须】value=1可以写死  -->
+      <input type="hidden" name="numPerPage" value="{$numPerPage}" />     
+      <input type="hidden" name="orderField" value="{$orderField}" /><!-- 【可选】查询排序  -->
+      <input type="hidden" name="currentPage" value="{$pageNum}" /><!-- 当前页 -->
+	  <input type="hidden" name="orderDirection" value="{$orderDirection}" /><!-- 【可选】升序降序 -->     
+    </form>	
+	<div class="pagination" targetType="dialog" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="{$pageNumShown}" currentPage="{$pageNum}"></div>
+  </div>
+</div>

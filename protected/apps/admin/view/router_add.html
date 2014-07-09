@@ -1,0 +1,57 @@
+<div class="pageContent">
+	<form method="post" action="{url('router/add')}" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);" novalidate="novalidate">
+		<div class="pageFormContent" layoutH="57">
+					<dl>
+				<dt>订单编号：</dt>
+				<dd><input  class="required" name="orderno" type="text" size="25"  value="" /></dd>
+			</dl>
+			<dl>
+				<dt>下单客户：</dt>
+				<dd>
+				<input class="required" name="choose.customer_id" id="cus_id" type="hidden" size="20"  value="" />
+				<input class="required" name="choose.customer_name" id="cus_name" type="text" size="25"  value="" readonly="true"/>
+				<a lookupgroup="choose" class="button" href="{url('router/chooseup')}"  mask="true" title="选择客户" height="580" width="1000"><span>选择</span></a>
+				
+				</dd>
+			</dl>
+			<dl>
+				<dt>产品品名/信息 ：</dt>
+				<dd><input  class="required" name="item" type="text" size="25"  value="" /></dd>
+			</dl>
+			<dl>
+				<dt>下单时间：</dt>
+				<dd>
+				    <input class="required"  class="text" type="text" readonly="readonly" name="create_time" size="25" value="" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+				</dd>
+			</dl>
+									<dl>
+				<dt>预计交货时间：</dt>
+				<dd>
+				    <input class="required"  class="text" type="text" readonly="readonly" name="pre_time" size="25" value="" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+				</dd>
+			</dl>	
+									<dl>
+				<dt>订单美金金额($)：</dt>
+				<dd><input  class="required" name="price" type="text" size="25"  value="" /></dd>
+			</dl>
+									<dl>
+				<dt>现时汇率：</dt>
+				<dd><input  class="required" name="qa" type="text" size="25"  value="" /></dd>
+			</dl>
+<!-- 									<dl>
+				<dt>工厂付款金额(RMB)：</dt>
+				<dd><input  class="required" name="facroty_price" type="text" size="25"  value="" /></dd>
+			</dl> -->
+			<dl class="nowrap">
+				<dt>备注：</dt>
+				<dd><textarea cols="40" rows="5" name="description"></textarea></dd>
+			</dl>
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>

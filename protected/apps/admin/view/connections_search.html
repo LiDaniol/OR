@@ -1,0 +1,130 @@
+<link href="/wifiadmin/public/js/calendar/skin/default/datepicker.css" rel="stylesheet" type="text/css" />
+<link href="/wifiadmin/public/js/calendar/skin/WdatePicker.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/wifiadmin/public/js/calendar/calendar.js"></script>
+<script type="text/javascript" src="/wifiadmin/public/js/calendar/WdatePicker.js"></script>
+<script type="text/javascript" src="/wifiadmin/public/js/calendar/lang/zh-cn.js"></script>
+<div class="pageHeader">
+  <form  id="searchForm" name="searchForm" onsubmit="return navTabSearch(this);" action="{url('connections/index')}" method="post" rel="pagerForm">
+	<div class="searchBar">
+      <input type="hidden" id="gw_id" name="gw_id" value={$gw_id} />
+	  <ul class="searchContent">	
+        <li>
+		  <label>状态s：</label>
+		   <select id="status" name="status">
+             <option value="0" {if empty($status)} selected="selected"{/if}>选择状态</option>
+             {loop $arrStatus $k=>$v}
+             <option value="{$k}" {if $k == $status} selected="selected" {/if}>{$v}</option>
+            {/loop}
+          </select>
+		</li>
+		<li style="width:400px">
+		  	<label>连接时间：</label>
+			<input id="startdate" class="text" type="text" readonly="readonly" name="startdate" value="{$startdate}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+			至
+			<input id="enddate" class="text" type="text" readonly="readonly" name="enddate" value="{$enddate}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+		</li>
+		<li>
+    		  <label>关键字：</label>
+		  <input type="text" name="keyword" id="keyword" class="medium" value="{$keyword}">
+		</li>
+	  </ul>
+	  <div class="subBar">
+		<ul>
+		  <li>
+            <div class="buttonActive">
+              <div class="buttonContent">
+                <button type="submit" id="submit_letter">查询</button>
+              </div>
+            </div>
+            <div class="buttonActive" style="margin-left:10px;">
+              <div class="buttonContent" >
+                <button type="button" onclick="all_search_letter();">显示所有</button>
+              </div>              
+           </div>
+           <div class="buttonActive" style="margin-left:10px;">
+              <div class="buttonContent" >
+                <button type="button" onclick="import_excel()">导出数据</button>
+              </div>              
+           </div>
+          </li>
+		</ul>
+	  </div>
+	  
+	</div>
+    </form>
+    		
+</div>
+<div class="pageContent">
+  <table class="table" width="100%" layoutH="138">
+	<thead>
+		<tr>
+            <th width="60" orderField="gw_id" >网关id</th>
+			<th width="100" >状态</th>
+			<th width="100" >路由器IP</th>
+			<th width="80" >用户名</th>
+			<th width="80" orderField="incoming" >下载数</th>
+			<th width="80" orderField="outgoing" >上传数</th>
+            <th width="200" orderField="created_at" >连接时间</th>
+            <th width="200" orderField="updated_at" >更新时间</th>
+            <th width="400" >浏览器类型</th>
+            <!-- <th width="150" orderField="truename" >MAC地址</th> -->
+            <!-- <th width="100" orderField="truename" >断开原因</th> -->
+		</tr>
+	</thead>
+	<tbody>
+		{loop $data $v}
+        <?php $status = $arrStatus[$v['status']];?>
+		<tr target="sid_node">
+			<td>{$v['gw_id']}</td>
+            <td>{$status}</td>
+            <td>{$v['ip']}</td>
+            <td>{$v['username']}</td>
+            <td>{$v['incoming']}</td>
+            <td>{$v['outgoing']}</td>
+            <td>{$v['created_at']}</td>
+            <td>{$v['updated_at']}</td>
+            <td>{$v['user_agent']}</td>
+            <!-- <td>{$v['mac']}</td> -->
+            <!-- <td>{$v['disconnect_reason']}</td> -->
+		</tr>
+      {/loop}
+	</tbody>
+  </table>
+  <div class="panelBar">
+	<div class="pages">
+      <span>每页显示</span>
+			<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value});">
+				<option value="20"  {if $numPerPage == 20} selected="selected"  {/if}>20</option>
+				<option value="50"   {if $numPerPage == 50} selected="selected"  {/if}>50</option>
+				<option value="100" {if $numPerPage == 100} selected="selected"  {/if}>100</option>
+				<option value="200" {if $numPerPage == 200} selected="selected"  {/if}>200</option>
+			</select>
+		<span>条，共{$totalCount}条</span>
+	</div>
+	<form id="pagerForm" action="{url('connections/index')}" method="post">
+     <input type="hidden" name="pageNum" value="1" /><!--  【必须】value=1可以写死  -->
+      <input type="hidden" name="numPerPage" value="{$numPerPage}" />     
+      <input type="hidden" name="orderField" value="{$orderField}" /><!-- 【可选】查询排序  -->
+      <input type="hidden" name="currentPage" value="{$pageNum}" /><!-- 当前页 -->
+	  <input type="hidden" name="orderDirection" value="{$orderDirection}" /><!-- 【可选】升序降序 -->     
+	</form>
+	<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="{$pageNumShown}" currentPage="{$pageNum}"></div>
+  </div>
+</div>
+<script type="text/javascript">
+	function all_search_letter(){
+		$("#status").val(0);
+		$("#keyword").val('');
+		$("#submit_letter").click();
+	}
+	function import_excel(){
+		if(confirm('确定导出所有数据？')){
+			var status = $("#status").val();
+			var keyword = $("#keyword").val();
+			var startdate = $("#startdate").val();
+			var enddate = $("#enddate").val();
+			var para = "&out_excel=OK&status="+status+"&keyword="+keyword+"&startdate="+startdate+"&enddate="+enddate;
+			window.location.href="{url('connections/importExcel')}"+para;
+		}
+	}
+</script>

@@ -1,0 +1,77 @@
+<div class="pageHeader">
+  <form  id="searchForm" name="searchForm" onsubmit="return dwzSearch(this, 'dialog');" action="{url('router/lookup')}" method="post" rel="pagerForm">
+	<div class="searchBar">
+	  <ul class="searchContent">
+		<li>
+		  <label>关键字：</label>
+		  <input type="text" name="keyword" id="keyword" class="medium" value="{$keyword}">
+		</li>
+	  </ul>
+	  <div class="subBar">
+		<ul>
+		  <li>
+            <div class="buttonActive">
+              <div class="buttonContent">
+                <button type="submit" id="submit_letter">查询</button>
+              </div>
+            </div>
+            <div class="buttonActive" style="margin-left:10px;">
+              <div class="buttonContent" >
+                <button type="button" onclick="all_search_letter();">显示所有</button>
+              </div>              
+           </div>
+          </li>
+		</ul>
+	  </div>
+	</div>
+    </form>
+</div>
+<div class="pageContent">
+	<table class="table" layoutH="118" targetType="dialog" width="100%">
+		<thead>
+			<tr>
+              <th width="80" orderField="username" >商家名称</th>
+              <th width="40" orderField="username" >网关id</th>
+			  <th width="80">点击选择</th>
+			</tr>
+		</thead>
+		<tbody>
+          {loop $routers $router}
+			<tr>
+              <td>{$router['name']}</td>
+              <td>{$router['gw_id']}</td>
+			  <td>
+				<a class="btnSelect" href=javascript:$.bringBack({name:"{$router['name']}",gw_id:"{$router['gw_id']}"}) title="点击选择">点击选择</a>
+			  </td>
+			</tr>
+          {/loop}
+		</tbody>
+	</table>
+    <div class="panelBar">
+	<div class="pages">
+		<span>每页显示</span>
+			<select class="combox"  name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value});">
+				<option value="20"  {if $numPerPage == 20}  selected="selected"  {/if}>20</option>
+				<option value="50"  {if $numPerPage == 50}  selected="selected"  {/if}>50</option>
+				<option value="100" {if $numPerPage == 100} selected="selected"  {/if}>100</option>
+				<option value="200" {if $numPerPage == 200} selected="selected"  {/if}>200</option>
+			</select>
+		<span>条，共{$totalCount}条</span>
+	</div>
+	<form id="pagerForm" action="{url('router/lookup')}" method="post">
+      <input type="hidden" name="pageNum" value="1" /><!--【必须】value=1可以写死-->
+	  <input type="hidden" name="numPerPage" value="{$numPerPage}" />
+      <input type="hidden" name="orderField" value="{$orderField}" /><!--【可选】查询排序-->
+      <input type="hidden" name="currentPage" value="{$pageNum}" /><!--当前页-->
+	  <input type="hidden" name="orderDirection" value="asc" /><!-- 【可选】升序降序 -->  
+	</form>
+	<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="{$pageNumShown}" currentPage="{$pageNum}"></div>
+  </div>
+</div>
+<script type="text/javascript">
+	function all_search_letter(){
+		$("#gw_id").val(0);
+		$("#keyword").val('');
+		$("#submit_letter").click();
+	}
+</script>
