@@ -40,6 +40,7 @@
 		<tr>
 			<th width="80"  >用户名</th>
             <th width="40"  >姓名</th>
+            <th width="60"  >职位</th>
 			<th width="100"  >联系电话</th>
 			<th width="200"  >手机</th>
 			<th width="200" orderField="last_heartbeat_sys_uptime" >添加时间</th>
@@ -52,12 +53,13 @@
 		<tr target="sid_node">
             <td>{$v['user_name']}</td>
             <td>{$v['user_realname']}</td>
+            <td>{$v['pos_name']}</td>
             <td>{$v['user_phone']}</td>
             <td>{$v['user_mobile']}</td>
             <td>{$v['user_regdate']}</td>
             <td>
-              <a href="{url('accessrights/edit')}&id={$v['user_id']}" rel="accessrights_list_edit_{$v['user_id']}" mask="true" target="dialog" height="580" width="750">编辑</a> |
-              <a href="{url('accessrights/del')}&id={$v['user_id']}" rel="accessrights_list_del_{$v['user_id']}" target="ajaxTodo" width="700" height="500" title="你确定要删除所选的吗？">删除</a>
+              <!-- <a href="{url('accessrights/edit')}&id={$v['user_id']}" rel="accessrights_list_edit_{$v['user_id']}" mask="true" target="dialog" height="580" width="750">编辑</a> |
+               --><a href="{url('accessrights/del')}&id={$v['user_id']}" rel="accessrights_list_del_{$v['user_id']}" target="ajaxTodo" width="700" height="500" title="你确定要删除所选的吗？">删除</a>
             </td>
 		</tr>
       {/loop}

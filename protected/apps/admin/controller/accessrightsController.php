@@ -42,8 +42,10 @@ class accessrightsController extends commonController
         	$total_count = $this->a->count();         
         }
         $users = !empty($users)?$users:array();
+        $arr = array(1=>'管理员',2=>'财务',3=>'业务主管',4=>'业务员');
         foreach ( $users as $k => $v ){      	
         	$users[$k]['user_regdate']=date("Y-m-d H:i:s",$v['user_regdate']);
+        	$users[$k]['pos_name'] = $arr[$v['pos_id']];
         }
 		$this->assign('numPerPage', $this->numPerPage);
 		$this->assign('orderField', $this->orderField);
@@ -64,6 +66,7 @@ class accessrightsController extends commonController
     	$user_name = in( $_POST['user_name'] );
     	$user_password = in( $_POST['user_password'] );
     	$user_realname = in( $_POST['user_realname'] );
+    	$pos_id = in( $_POST['pos_id'] );
     	$user_emp_no = in( $_POST['user_emp_no'] );
     	$user_gender = in( $_POST['user_gender'] );
     	$user_mobile = in( $_POST['user_mobile'] );
@@ -76,6 +79,7 @@ class accessrightsController extends commonController
     			'user_name'     => $user_name,
     			'user_password' => md5( $user_password ),
     			'user_realname' => $user_realname,
+    			'pos_id'        => $pos_id,
     			'user_emp_no'   => $user_emp_no,
     			'user_gender'   => $user_gender,
     			'user_mobile'   => $user_mobile,
