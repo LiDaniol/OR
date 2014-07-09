@@ -40,7 +40,8 @@ class routerController extends commonController
     {
     	//业务员权限模块
     	$userid = U::$userdata['user_id'];
-    	if($userid>1){
+    	$pos_id = U::$userdata['pos_id'];
+    	if($pos_id==4){
     		$condition  = ' 1  and userid='.$userid;
     	}else{
     		$condition  = ' 1 ';
