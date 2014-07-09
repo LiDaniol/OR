@@ -138,7 +138,7 @@ class SessionAdmin{
 					if(!empty($session_userdata['user_id']) && $session_userdata['user_id']==$user_id){//如果session中已存在，直接读session数据						
 						$userdata = $_SESSION[config('SPOT') . 'userdata'];
 					}else {//如果session中不存在，则从用户表中读取		
-						$userdata = model("adminuser")->find( "user_id=$user_id", 'user_id,user_name,user_realname,sc_id,login_num,last_login_ip,last_login_time' );
+						$userdata = model("adminuser")->find( "user_id=$user_id", 'user_id,user_name,user_realname,sc_id,login_num,last_login_ip,last_login_time,pos_id' );
 						//$userdata = $this->model->table( TBL_ADMIN_USERS )->field('user_id,user_name,login_num,last_login_ip,last_login_time')->where( array( 'user_id'=>$user_id ) )->find(  );
 						$_SESSION[config('SPOT') . 'userdata'] = $userdata;
 					}
