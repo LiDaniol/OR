@@ -111,14 +111,17 @@ class customerController extends commonController
 	/* 插入数据到数据库 */
 	function insert(  )
 	{
-		$comp_name      = in( $_POST['customer_name'] );   //公司名称
-		$comp_addr      = in( $_POST['customer_addr'] );    //公司详细地址
+		$comp_name      = in( $_POST['customer_name'] );   //客户名称
+		$comp_addr      = in( $_POST['customer_addr'] );    //客户详细地址
 		$comp_mobile    = in( $_POST['customer_mobile'] ); //手机号码
 		$comp_phone     = in( $_POST['customer_phone'] );   //电话号码
 		$comp_fax       = in( $_POST['customer_fax'] );       //传真
 		$comp_email     = in( $_POST['customer_email'] );  //电子邮箱
 		$comp_manager   = U::$userdata['user_id']; //负责人姓名
-		$comp_desc      =  $_POST['customer_desc'] ;     //公司描述
+		$comp_desc      =  $_POST['customer_desc'] ;     //客户描述
+		$customer_country      =  $_POST['customer_country'] ;     //公司
+		$customer_company      =  $_POST['customer_company'] ;     //国家
+		$customer_no      =  $_POST['customer_no'] ;     //编号
 
 		if ( empty($comp_name) || strlen($comp_name) < 3)
 		{
@@ -134,6 +137,9 @@ class customerController extends commonController
 		{			
 			$data_ary = array(
 							'customer_name' 		=> $comp_name,
+					'customer_country' 	    => $customer_country,
+					'customer_company' 	    => $customer_company,
+					'customer_no' 	    => $customer_no,
 							'customer_addr' 	    => $comp_addr,
 							'customer_mobile' 	    => $comp_mobile,
 							'customer_phone' 	    => $comp_phone,
