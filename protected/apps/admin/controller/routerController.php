@@ -112,6 +112,7 @@ class routerController extends commonController
 		$this->assign('pageNumShown', 10);
 		$this->assign('totalCount', $total_count);
         $this->assign('routers', $routers);
+        $this->assign( "pos_id", $pos_id );
         $this->display();
     }
 
@@ -359,7 +360,6 @@ class routerController extends commonController
     		$objWorksheet->getColumnDimension('K')->setWidth(18);
     		$objWorksheet->setCellValue('L1', "备注");
     		$objWorksheet->getColumnDimension('L')->setWidth(18);
-    		$condition = ' WHERE 1 ';
     		
     	    	//业务员权限模块
     	$userid = U::$userdata['user_id'];
@@ -401,7 +401,11 @@ class routerController extends commonController
         	$c_edate = strtotime($_POST['c_enddate']." 23:59:59");
         	$condition .= " AND create_time<= $c_edate ";
         }
-            $query = "SELECT *,(select sum(price) from caigou where order_id=a.id) as facroty_price FROM orders as a  $condition ORDER BY {$this->orderField} {$this->orderDirection}";
+            $query = "SELECT *,(select sum(price) from caigou where order_id=a.id) as facroty_price,";
+            $query.= " (select user_realname from admin_users where user_id=a.userid) as user_name,";
+            $query.= " (select sum(price) from extras where order_id=a.id ) as other_price,";
+            $query.= " (select customer_name from customer where id=a.customer) as customer";
+            $query.=" FROM orders as a  where $condition ORDER BY {$this->orderField} {$this->orderDirection}";
     		$routers = $this->m->query($query);
     		$routers = empty($routers)?array():$routers;
     		$y=2;

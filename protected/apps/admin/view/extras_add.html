@@ -22,11 +22,12 @@
 			<dl style="width:500px;">
 				<dt>费用类型：</dt>
 				<dd>
-				    <select name="extra_type">
+				    <select name="extra_type" onchange="show_order(this.value);">
 				        <option value="1">订单-其他费用</option>
+				        <option value="2">杂费</option>
 				    </select>
 			</dl>	
-			<dl style="width:500px;">
+			<dl style="width:500px;display:none;" id="order_no_input">
 				<dt>订单编号：</dt>
 				<input class="required" name="choose.order_id" id="cus_id" type="hidden" size="20"  value="" />
 				<input class="required" name="choose.order_no" id="cus_name" type="text" size="25"  value="" readonly="true"/>
@@ -59,5 +60,10 @@
 	function check_form(){
 		$('#submit').click();
 		return true;
+	}
+	function show_order(val){
+		if(val==1){
+			$('#order_no_input').show();
+		}
 	}
 </script>

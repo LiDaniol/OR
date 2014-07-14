@@ -103,7 +103,9 @@
             </td>
             <td style="color:red;">{$router['en_price']}</td>
             <td>
-            {$router['other_price']}
+                <a href="{url('router/otherpricelist')}&id={$router['id']}" rel="otherpricelist_{$router['id']}" title="其他支出明细" mask="true" target="dialog"  height="500" width="1200">
+                {$router['other_price']}
+                </a>
             </td>
             <td>{$order_status}</td>
             <td>{$audit_status}</td>
@@ -112,9 +114,9 @@
             {if $router['audit_status']==1}
               <a href="{url('router/edit')}&id={$router['id']}" rel="router_list_edit_{$router['id']}" mask="true" target="dialog" height="600" width="750">编辑</a> |
               <a href="{url('router/del')}&id={$router['id']}" rel="router_list_del_{$router['id']}" target="ajaxTodo" width="700" height="500" title="你确定要删除所选的吗？">删除</a>|
-              <a href="{url('router/otherpricelist')}&id={$router['id']}" rel="otherpricelist_{$router['id']}" title="其他支出明细" mask="true" target="dialog"  height="500" width="1200">
-                                              查看支出明细
-              </a>
+            {/if}
+            {if $pos_id==2}
+                <a href="{url('router/audit')}&id={$router['id']}" rel="router_list_audit_{$router['id']}" mask="true" target="dialog" height="600" width="750">审核</a>
             {/if}
             </td>
 		</tr>
@@ -152,7 +154,6 @@
 	}
 	function check_out(){
 		if(confirm("你确定要导出此次显示的数据吗?")){
-			var s_gw_id=document.getElementById("gw_id").value;
 			document.getElementById('exportChoose').click();
 	    }
 	}   

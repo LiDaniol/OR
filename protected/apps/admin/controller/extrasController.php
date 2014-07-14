@@ -61,6 +61,7 @@ class extrasController extends commonController
 		$this->assign( "lists", array());
 		$this->assign( "totalCount", $total_count );
 		$this->assign( "keyword", $keyword );
+		$this->assign( "pos_id", $pos_id );
 		$this->display();
 	}
 
