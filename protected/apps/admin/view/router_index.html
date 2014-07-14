@@ -45,10 +45,9 @@
 	</div>
     </form>
     <form name="frm_export" id="frm_export" action="{url('router/export')}" method="post" rel="frm_export">
-        <input type="hidden"  name="gwId" id="gwId" value="{$s_gw_id}"/>
-        <input type="hidden"  name="router_name" id="router_name" value="{$s_router_name}"/>
-        <input type="hidden"  name="startdate" id="startdate" value="{$startdate}"/>
-        <input type="hidden"  name="enddate" id="enddate" value="{$enddate}"/>
+        <input type="hidden"  name="sItem" id="sItem" value="{$sItem}"/>
+        <input type="hidden"  name="sOrderNo" id="sOrderNo" value="{$sOrderNo}"/>
+        <input type="hidden"  name="order_status" id="order_status" value="{$s_order_status}"/>
         <input type="hidden"  name="c_startdate" id="c_startdate" value="{$c_startdate}"/>
         <input type="hidden"  name="c_enddate" id="c_enddate" value="{$c_enddate}"/>
         <input id="exportChoose" style="display:none;" type="submit"  name="out_excel" value="导出选中">
@@ -59,8 +58,8 @@
 	<ul class="toolBar">
 	
 	  <li><a class="add" href="{url('router/add')}" target="dialog" mask="true" rel="routerListAdd" title="下单" height="300" width="750"><span>下单</span></a></li>
-	 <!--  <li><a class="add" href="javascript:void(0);" onclick="check_out();" rel="routerListExport" title="导出" ><span>导出数据</span></a></li>
-	 --></ul>
+	  <li><a class="add" href="javascript:void(0);" onclick="check_out();" rel="routerListExport" title="导出" ><span>导出数据</span></a></li>
+	</ul>
   </div>
   <table class="table" width="100%" layoutH="138">
 	<thead>

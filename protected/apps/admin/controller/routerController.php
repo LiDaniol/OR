@@ -335,113 +335,97 @@ class routerController extends commonController
     		$objWorksheet = $objExcel->getActiveSheet();
     		$objExcel->setActiveSheetIndex(0); //设置当前活动的sheet
     		$objWorksheet->setTitle('订单列表'); //设置sheet名字
-    		$objWorksheet->setCellValue('A1', "序号");
+    		$objWorksheet->setCellValue('A1', "订单编号");
     		$objWorksheet->getColumnDimension('A')->setWidth(8);
-    		$objWorksheet->setCellValue('B1', "名称");
+    		$objWorksheet->setCellValue('B1', "产品品名/信息");
     		$objWorksheet->getColumnDimension('B')->setWidth(15);
-    		$objWorksheet->setCellValue('C1', "id");
+    		$objWorksheet->setCellValue('C1', "订单美金金额");
     		$objWorksheet->getColumnDimension('C')->setWidth(15);
-    		$objWorksheet->setCellValue('D1', "时间");
+    		$objWorksheet->setCellValue('D1', "下单客户");
     		$objWorksheet->getColumnDimension('D')->setWidth(18);
-    		$objWorksheet->setCellValue('E1', "");
+    		$objWorksheet->setCellValue('E1', "业务员");
     		$objWorksheet->getColumnDimension('E')->setWidth(15);
-    		$objWorksheet->setCellValue('F1', "");
+    		$objWorksheet->setCellValue('F1', "下单时间");
     		$objWorksheet->getColumnDimension('F')->setWidth(24);
-    		$objWorksheet->setCellValue('G1', "");
+    		$objWorksheet->setCellValue('G1', "预计交货时间");
     		$objWorksheet->getColumnDimension('G')->setWidth(11);
-    		$objWorksheet->setCellValue('H1', "");
+    		$objWorksheet->setCellValue('H1', "采购成本");
     		$objWorksheet->getColumnDimension('H')->setWidth(11);
-    		$objWorksheet->setCellValue('I1', "");
+    		$objWorksheet->setCellValue('I1', "利润(RMB)");
     		$objWorksheet->getColumnDimension('I')->setWidth(11);
-    		$objWorksheet->setCellValue('J1', "");
+    		$objWorksheet->setCellValue('J1', "其他支出");
     		$objWorksheet->getColumnDimension('J')->setWidth(18);
+    		$objWorksheet->setCellValue('K1', "订单状态");
+    		$objWorksheet->getColumnDimension('K')->setWidth(18);
+    		$objWorksheet->setCellValue('L1', "备注");
+    		$objWorksheet->getColumnDimension('L')->setWidth(18);
     		$condition = ' WHERE 1 ';
     		
-    		if(U::$userdata['sc_id'] != 0){
-    			$sc_id = U::$userdata['sc_id'];
-    			$sc_type = strlen($sc_id)/2;
-    			$res = $this->partnerDAO->getPartnerIdsList("",$sc_id,$sc_type,"","");
-    			$company_infos = $res['partner_ids'];
-    			//$company_infos = $this->partnerDAO->getPartnerIdsList($sc_id,$sc_type);
-    			$company_ids = '';
-    			if(!empty($company_infos))
-    			{
-    				foreach ($company_infos as $v){
-    					$company_ids .= $company_ids ==''?$v:','.$v;
-    				}
-    			}else
-    			{
-    				$company_ids = -1;
-    			}
-    			$condition .= " and comp_id in($company_ids)";
-    		}
-    		
-    		if( $_POST['gwId'] != "" ){
-    			$condition .= " and gw_id like '%".$_POST['gwId']."%'";
-    		}
-    		if($_POST['router_name']!=""){
-    			$condition .= " and name like '%".$_POST['router_name']."%'";
-    		}
-    		if($_POST['udd_name']!="")
-    		{
-    			$condition .= " and name =''";
-    		}
-    		if( !empty( $_POST['startdate'] ))
-    		{
-    			$sdate = $_POST['startdate'];
-    			$condition .= " AND to_days(last_heartbeat_at) >= to_days('$sdate') ";
-    		}
-    		
-    		if( !empty( $_POST['enddate'] ))
-    		{
-    			$edate = $_POST['enddate']." 23:59:59";
-    			$condition .= " AND to_days(last_heartbeat_at) <= to_days('$edate') ";
-    		}
-    		//根据路由添加时间查询
-    		if( !empty( $_POST['c_startdate'] ))
-    		{
-    			$c_sdate = $_POST['c_startdate'];
-    			$condition .= " AND to_days(created_at) >= to_days('$c_sdate') ";
-    		}
-    			
-    		if( !empty( $_POST['c_enddate'] ))
-    		{
-    			$c_edate = $_POST['c_enddate']." 23:59:59";
-    			$condition .= " AND to_days(created_at) <= to_days('$c_edate') ";
-    		}
-    		
-    		$query = "SELECT * FROM ".config( 'DB_PREFIX' ).$this->table." $condition ORDER BY {$this->orderField} {$this->orderDirection}";
+    	    	//业务员权限模块
+    	$userid = U::$userdata['user_id'];
+    	$pos_id = U::$userdata['pos_id'];
+    	if($pos_id==4){
+    		$condition  = ' 1  and userid='.$userid;
+    	}else{
+    		$condition  = ' 1 ';
+    	}
+       
+        if($_REQUEST['customer_id']!=''){
+            $customer_id = intval($_REQUEST['customer_id']);
+            $condition .= ' and customer='.$customer_id;
+        }
+        if($_POST['sOrderNo']!="")
+        {
+        	$sOrderNo = in($_POST['sOrderNo']);
+        	$condition .= " and orderno like '%".$sOrderNo."%'";
+        }
+        //根据网关Item查询
+        if($_POST['sItem']!="")
+        {
+        	$sItem = in($_POST['sItem']);
+        	$condition .= " and item like '%".$sItem."%'";
+        }
+        if($_POST['order_status']!=""){
+        	$sOrderStatus = in($_POST['order_status']);
+        	$condition .= " and audit_status='".$sOrderStatus."'";
+        }
+        //根据添加时间查询
+        if( !empty( $_POST['c_startdate'] ))
+        {
+        	$c_sdate = strtotime($_POST['c_startdate']);
+        	$condition .= " AND create_time >= $c_sdate ";
+        }
+        	
+        if( !empty( $_POST['c_enddate'] ))
+        {
+        	$c_edate = strtotime($_POST['c_enddate']." 23:59:59");
+        	$condition .= " AND create_time<= $c_edate ";
+        }
+            $query = "SELECT *,(select sum(price) from caigou where order_id=a.id) as facroty_price FROM orders as a  $condition ORDER BY {$this->orderField} {$this->orderDirection}";
     		$routers = $this->m->query($query);
     		$routers = empty($routers)?array():$routers;
-    		//$routers = $this->router->getList($condition,0,1000);
     		$y=2;
     		$no = 0;
-
-    		foreach($routers as $excel){
-    	
-    			$name = !empty( $excel['name'] ) ? $excel['name'] : '未知';
-    			$sys_time = $excel['last_heartbeat_sys_uptime'];
-    			$day = intval($sys_time/3600/24);
-    			$hour = intval(($sys_time - $day*3600*24)/3600);
-    			$minute = intval(($sys_time - $day*3600*24 - $hour*3600)/60);
-    			$second = ($sys_time - $day*3600*24 - $hour*3600-minute*60)%60;
-    			if ( !empty( $day ) || !empty( $hour ) || !empty( $minute ) || !empty( $second ) )
-    				$sys_uptime = $day.' 天'.$hour.' 小时'.$minute.' 分钟'.$second.' 秒';
-    			else
-    				$sys_uptime = '';
-    			$memfree = !empty($excel['last_heartbeat_sys_memfree'])?intval($excel['last_heartbeat_sys_memfree']/1024).'M':'';
+    		$oS = array('1'=>'新订单','2'=>'已完成');
+    		foreach($routers as $v){
+    			$order_status = $oS[$v['order_status']];
+    			$v['create_time']=$v['create_time']==0?'--':date('Y-m-d H:i',$v['create_time']);
+    			$v['pre_time']=$v['pre_time']==0?'--':date('Y-m-d H:i',$v['pre_time']);
+    			$v['en_price']=$v['qa']*$v['price'] - $v['other_price'] - $v['facroty_price'];
     			//数据
-    			$objWorksheet->getCell('A'.$y)->setValueExplicit($no, PHPExcel_Cell_DataType::TYPE_NUMERIC);//
-    			$objWorksheet->getCell('B'.$y)->setValueExplicit($name, PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('C'.$y)->setValueExplicit($excel['gw_id'], PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('D'.$y)->setValueExplicit($excel['last_heartbeat_at'], PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('E'.$y)->setValueExplicit($excel['last_heartbeat_ip'], PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('F'.$y)->setValueExplicit($sys_uptime, PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('G'.$y)->setValueExplicit($memfree, PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('H'.$y)->setValueExplicit($excel['last_heartbeat_sys_load'], PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('I'.$y)->setValueExplicit($excel['last_heartbeat_vertion'], PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getCell('J'.$y)->setValueExplicit($excel['created_at'], PHPExcel_Cell_DataType::TYPE_STRING);//
-    			$objWorksheet->getStyle('I'.$y)->getAlignment()->setWrapText(true);
+    			$objWorksheet->getCell('A'.$y)->setValueExplicit($v['orderno'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('B'.$y)->setValueExplicit($v['item'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('C'.$y)->setValueExplicit($v['price'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('D'.$y)->setValueExplicit($v['customer'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('E'.$y)->setValueExplicit($v['user_name'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('F'.$y)->setValueExplicit($v['create_time'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('G'.$y)->setValueExplicit($v['pre_time'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('H'.$y)->setValueExplicit($v['facroty_price'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('I'.$y)->setValueExplicit($v['en_price'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('J'.$y)->setValueExplicit($v['other_price'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('K'.$y)->setValueExplicit($order_status, PHPExcel_Cell_DataType::TYPE_STRING);//
+    			$objWorksheet->getCell('L'.$y)->setValueExplicit($v['description'], PHPExcel_Cell_DataType::TYPE_STRING);//
+    			//$objWorksheet->getStyle('I'.$y)->getAlignment()->setWrapText(true);
     			$y++;
     			$no++;
     		}
