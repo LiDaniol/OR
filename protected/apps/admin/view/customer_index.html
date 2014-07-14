@@ -56,6 +56,10 @@
 	</thead>
 	<tbody>
 	  {loop $company_list $v}
+	  <?php
+	    $dis_arr = array(3,2);
+        $dis_key = in_array($pos_id,$dis_arr)?1:0;
+      ?>
 	  <tr target="sid_node" rel="{$v['id']}">
 		<td>{$v['customer_name']}</td>
         <td>{$v['customer_addr']}</td>
@@ -69,7 +73,9 @@
 		    {$v['order_num']}
 		</td>
 		<td>
+		{if $dis_key}
 		<a href="{url('customer/edit')}&customer_id={$v['id']}" rel="edit_comp" mask="true" target="dialog" height="600" width="900">编辑</a> |  
+		{/if}
         <a href="{url('customer/del')}&customer_id={$v['id']}" rel="edit_comp" mask="true" target="ajaxTodo" title="你确定要删除所选的吗？">删除</a> |  
 		{if !$v['router_num']}
 		<a href="{url('router/index')}&customer_id={$v['id']}"  mask="true" target="navTab" rel="routerList" title="订单列表">
