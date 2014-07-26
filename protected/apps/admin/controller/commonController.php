@@ -31,7 +31,7 @@ class commonController extends backgroundController
 			}
 			else
 			{
-				$this->response( -1, '登录超时！', '', 'closeCurrent', '登录超时', url('login/dialog') );
+				//$this->response( -1, '登录超时！', '', 'closeCurrent', '登录超时', url('login/dialog') );
 				exit;
 			}
 		}
