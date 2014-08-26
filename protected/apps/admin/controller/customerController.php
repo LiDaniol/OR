@@ -31,7 +31,7 @@ class customerController extends commonController
     	$userid = U::$userdata['user_id'];
     	$pos_id = U::$userdata['pos_id'];
     	if($pos_id==4){
-    		$condition  = ' 1  and createby='.$userid;
+    		$condition  = ' 1  and create_by='.$userid;
     	}else{
     		$condition  = ' 1 ';
     	}
