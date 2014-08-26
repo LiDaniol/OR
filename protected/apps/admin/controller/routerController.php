@@ -115,6 +115,23 @@ class routerController extends commonController
         $this->assign( "pos_id", $pos_id );
         $this->display();
     }
+    public function audit(){
+    	if ( $this->isPost() ){
+    		$id = isset($_POST['id'])?($_POST['id']+0):0;
+    		$audit_status = isset($_POST['audit_status'])?($_POST['audit_status']+0):0;
+    		if($audit_status){
+    			if ($this->m->update("id=$id", array('audit_status'=>$audit_status)) !== FALSE)
+    			{
+    				$this->response( 1, '订单审核成功！', 'routerList' );
+    			}	
+    		}
+    		$this->response( 1, '订单审核成功！', 'routerList' );
+    	}else{
+    		$id = isset($_GET['id'])?($_GET['id']+0):0;
+    		$this->assign('audit_order_id', $id);
+    		$this->display();
+    	}
+    }
 
     public function add() 
     {

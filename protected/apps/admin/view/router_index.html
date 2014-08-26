@@ -57,7 +57,7 @@
   <div class="panelBar">
 	<ul class="toolBar">
 	
-	  <li><a class="add" href="{url('router/add')}" target="dialog" mask="true" rel="routerListAdd" title="下单" height="300" width="750"><span>下单</span></a></li>
+	  <li><a class="add" href="{url('router/add')}" target="dialog" mask="true" rel="routerListAdd" title="下单" height="500" width="750"><span>下单</span></a></li>
 	  <li><a class="add" href="javascript:void(0);" onclick="check_out();" rel="routerListExport" title="导出" ><span>导出数据</span></a></li>
 	</ul>
   </div>
@@ -116,7 +116,7 @@
               <a href="{url('router/del')}&id={$router['id']}" rel="router_list_del_{$router['id']}" target="ajaxTodo" width="700" height="500" title="你确定要删除所选的吗？">删除</a>|
             {/if}
             {if $pos_id==2}
-                <a href="{url('router/audit')}&id={$router['id']}" rel="router_list_audit_{$router['id']}" mask="true" target="dialog" height="600" width="750">审核</a>
+                <a href="{url('router/audit')}&id={$router['id']}" rel="router_list_audit_{$router['id']}" mask="true" target="dialog" height="200" width="450">审核</a>
             {/if}
             </td>
 		</tr>

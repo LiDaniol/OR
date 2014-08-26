@@ -21,7 +21,7 @@
 			<li><a href="{url('caigou/index')}" target="navTab" rel="caigouList">采购单列表</a></li>
 		</ul>
 	</div>
-	
+	{if $caiwu != '2'}
     <div class="accordionHeader">
 		<h2><span>Folder</span>客户管理</h2>
 	</div>
@@ -39,7 +39,7 @@
 			<li><a href="{url('supplier/index')}" target="navTab" rel="supplierList">供应商列表</a></li>
 		</ul>
 	</div>
-	
+	{/if}
 
 	{if $power == '1'}
 		<div class="accordionHeader">
