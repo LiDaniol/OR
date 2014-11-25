@@ -4,13 +4,13 @@ class paymentController extends commonController
 	public  $numPerPage;  // 每页显示的条数
 	public  $pageNum;     // 当前页码
 	public  $orderField;  // 排序字段
-	private $extras = NULL;
+	private $payment = NULL;
 	private $router = NULL;
 
 	public function __construct(  )
 	{
 		parent::__construct();
-		$this->extras =new extrasModel();
+		$this->payment =new paymentModel();
 		$this->router=new routerModel();
 		$this->numPerPage   = isset($_POST['numPerPage']) ? in($_POST['numPerPage']) :20;
 		$this->pageNum      = isset($_POST['pageNum']) ? in($_POST['pageNum']) : 1;
@@ -43,8 +43,8 @@ class paymentController extends commonController
 		}
 		else
 		{
-			$cat_id  = isset( $_POST['cat_id']  ) ? $_POST['cat_id'] : 0;
 			$keyword = isset( $_POST['keyword'] ) ? in( $_POST['keyword'] ) : '';
+			$condition .= " and orderno like '".$keyword."%'";
 		}
 		//分页信息
 		$this->assign('numPerPage', $this->numPerPage);
@@ -52,11 +52,10 @@ class paymentController extends commonController
 		$this->assign('pageNum',    $this->pageNum);
 		$this->assign('pageNumShown', 10);
 		$start = ($this->pageNum - 1) * $this->numPerPage;
-		$extras_list = $this->extras->getList($condition,($this->pageNum-1)*$this->numPerPage,$this->numPerPage,$this->orderField,$this->orderDirection);
-		$total_count = $this->extras->count($condition);
-		
-		if(is_array($extras_list))
-		$this->assign( "lists", $extras_list );
+		$payment_list = $this->payment->getList($condition,($this->pageNum-1)*$this->numPerPage,$this->numPerPage,$this->orderField,$this->orderDirection);
+		$total_count = $this->payment->count($condition);
+		if(is_array($payment_list))
+			$this->assign( "lists", $payment_list );
 		else
 		$this->assign( "lists", array());
 		$this->assign( "totalCount", $total_count );
@@ -77,43 +76,48 @@ class paymentController extends commonController
 	/* 插入数据到数据库 */
 	function insert(  )
 	{
-		$extra_type      = intval( $_POST['extra_type'] );   //费用类型
-		$order_id      = in( $_POST['choose_order_id'] );    //订单ID
-		$price    = intval( $_POST['price'] ); //金额
-		$description     = in( $_POST['description'] );   //备注信息
-		$create_by = U::$userdata['user_id'];
+		$money_type 	= intval( $_POST['money_type'] );   //费用类型
+		$order_id      	= in( $_POST['choose_order_id'] );    //订单ID
+		$order_no     	= in( $_POST['choose_order_no'] );    //订单编号
+		$price           	= $_POST['price']+0; //金额
+		$qa              	= $_POST['qa']+0; //金额
+		$description  	= in( $_POST['description'] );   //备注信息
+		$create_by    	= U::$userdata['user_id'];
 
 		if ( empty($price))
 		{
 			$status = 0;
 			$msg = '请输入金额!';
 		}
-		elseif ($extra_type==1 && $order_id == '')
+		elseif ($extra_type==2 && $qa == '')
 		{
 			$status = 0;
-			$msg = '请选择订单';
+			$msg = '请输入汇率!';
 		}
 		else
 		{			
 			$data_ary = array(
-							'extra_type' 		=> $extra_type,
-							'order_id' 	    => $order_id,
-							'price' 	    => $price,
-							'description' 	    => $description,
-							'create_by' 	    => $create_by,
+							'orderid' 	     => $order_id,
+					        'orderno' 	  	 => $order_id,
+					        'price_rmb'  	 => $money_type==1?$price:0,
+							'price_dor' 	  	 => $money_type==2?$price:0,
+					        'qa' 	          	 => $qa,
+					        'addtime' 	  	 => date("Y-m-d H:i:s",time()),
+					        'create_by'  	 => $create_by,
+							'description'	 => $description,
 			);
-			if ($this->extras->insert($data_ary) !== FALSE)
+			if ($this->payment->insert($data_ary) !== FALSE)
 			{
 				$status = 1;
-				$msg = '添加费用成功！';
+				$msg = '添加成功！';
 			}
 			else
 			{
 				$status = 0;
-				$msg = '添加费用失败！';
+				$msg = '添加失败！';
 			}
 		}
-		$this->response( $status, $msg, 'extrasList' );
+		$this->response( $status, $msg, 'paymentList' );
 	}
 
 	function del(  )
@@ -121,13 +125,13 @@ class paymentController extends commonController
 	    if (isset( $_REQUEST['id']) && !empty( $_REQUEST['id'] ))
         {
             $id = in( $_REQUEST['id'] );
-            if ($this->extras->delete( array( 'id'=> $id ) ))
+            if ($this->payment->delete( array( 'id'=> $id ) ))
             {
-                $this->response( 3, '删除成功！', 'extrasList' );
+                $this->response( 3, '删除成功！', 'paymentList' );
             }
             else
             {
-                $this->response( 0, '删除失败！', 'extrasList' );
+                $this->response( 0, '删除失败！', 'paymentList' );
             }
         }
 	}
@@ -138,7 +142,7 @@ class paymentController extends commonController
 		if ( isset( $_GET['id'] ) )
 		{
 			$id = intval( $_GET['id'] );
-			$info = $this->extras->getinfo( $id );
+			$info = $this->payment->getinfo( $id );
 			
 			
 			$info['description'] = isset($info['description'])?$info['description']:'';

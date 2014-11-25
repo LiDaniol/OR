@@ -1,0 +1,92 @@
+<div class="pageHeader">
+  <form  id="searchForm" name="searchForm" onsubmit="return navTabSearch(this);" action="{url('receive/index')}" method="post" rel="pagerForm">
+	<div class="searchBar">
+	  <ul class="searchContent">
+<!-- 		<li>
+		  <label>分类：</label>
+		  <select name="cat_id">
+            <option value="0">所有分类</option>
+            {$cat_list}
+          </select>
+		</li> -->
+		
+		<li>
+		  <label>订单编号：</label>
+		  <input type="text" name="keyword" id="keyword" class="medium" value="{$keyword}">
+		</li>
+	  </ul>
+	  <div class="subBar">
+		<ul>
+		  <li>
+            <div class="buttonActive">
+              <div class="buttonContent">
+                <button type="submit">查询</button>
+              </div>
+            </div>
+          </li>
+		</ul>
+	  </div>
+	</div>
+    </form>
+</div>
+
+<div class="pageContent">
+  <div class="panelBar">
+	<ul class="toolBar">
+
+	  <li><a class="add" href="{url('receive/add')}" target="dialog" mask="true" rel="receive_add" title="添加" height="600" width="900"><span>添加</span></a></li>
+
+	</ul>
+  </div>
+
+  <table class="table" width="100%" layoutH="138">
+	<thead>
+	  <tr>
+		<th width="120"  >时间</th>
+        <th width="200"  >订单编号</th>
+        <th width="120"  >收款金额(RMB)</th>
+        <th width="120"  >收款金额(美金)</th>
+        <th width="120"  >汇率</th>
+        <th width="220"  >备注信息</th>
+		<!-- <th width="150" align="center">操作</th> -->
+	  </tr>
+	</thead>
+	<tbody>
+	  {loop $lists $v}
+	  <tr target="sid_node" rel="{$v['id']}">
+		<td>{$v['addtime']}</td>
+        <td>{$v['orderno']}</td>
+        <td>{if $v['price_rmb']!=0}{$v['price_rmb']}{/if}</td>
+        <td>{if $v['price_dor']!=0}{$v['price_dor']}{/if}</td>
+        <td>{$v['qa']}</td>
+        <td>{$v['description']}</td>
+<!-- 		<td>
+        <a href="{url('extras/del')}&id={$v['id']}" rel="edit_extra" mask="true" target="ajaxTodo" title="你确定要删除所选的吗？">删除</a> 
+		</td> -->
+	  </tr>
+      {/loop}
+	</tbody>
+  </table>
+
+  <div class="panelBar">
+	<div class="pages">
+		<span>每页显示</span>
+			<select class="combox" id="numPerPage_sel" name="numPerPage_sel" onchange="navTabPageBreak({numPerPage:this.value});">
+				<option value="20">20</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+				<option value="200">200</option>
+			</select>
+		<span>条，共{$totalCount}条</span>
+		<script>$('#numPerPage_sel').val('{$numPerPage}');</script>
+	</div>
+	<form id="pagerForm" name="pagerForm" action="{url('receive/index')}" method="post">
+      <input type="hidden" name="pageNum" value="1" /><!--  【必须】value=1可以写死  -->
+      <input type="hidden" name="numPerPage" value="{$numPerPage}" />     
+      <input type="hidden" name="orderField" value="{$orderField}" /><!-- 【可选】查询排序  -->
+      <input type="hidden" name="currentPage" value="{$pageNum}" /><!-- 当前页 -->
+	  <input type="hidden" name="orderDirection" value="{$orderDirection}" /><!-- 【可选】升序降序 -->     
+    </form>	
+	<div class="pagination" targetType="navTab" totalCount="{$totalCount}" numPerPage="{$numPerPage}" pageNumShown="{$pageNumShown}" currentPage="{$pageNum}"></div>
+  </div>
+</div>
