@@ -24,7 +24,9 @@
 				<dd>
 				    <select name="extra_type" onchange="show_order(this.value);">
 				        <option value="1">订单-其他费用</option>
-				        <option value="2">杂费</option>
+				        <option value="3">营业费用</option>
+				        <option value="4">管理费用</option>
+				        <option value="5">财务费用</option>
 				    </select>
 			</dl>	
 			<dl style="width:500px;" id="order_no_input">
@@ -64,6 +66,10 @@
 	function show_order(val){
 		if(val==1){
 			$('#order_no_input').show();
+		}else{
+			$('#order_no_input').hide();
+			$('#cus_id').removeClass("required");
+			$('#cus_name').removeClass("required");
 		}
 	}
 </script>
